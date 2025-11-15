@@ -171,74 +171,9 @@
                     <i class="bi bi-shield-lock"></i> Admin Login
                 </button>
             </div>
-            
-            <div class="mt-3 text-center">
-                <a href="#" class="toggle-link" onclick="toggleForms()">Don't have an account? Sign up</a>
-            </div>
         </form>
     </div>
     
-    <!-- Signup Form -->
-    <div class="container signup-container" id="signupForm" style="display: none;">
-        <div class="logo">
-            <h2>Create Account</h2>
-            <p class="text-muted">Register for a new account</p>
-        </div>
-        
-        <form>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="firstName" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="firstName" placeholder="First name" required>
-                </div>
-                
-                <div class="col-md-6 mb-3">
-                    <label for="lastName" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="lastName" placeholder="Last name" required>
-                </div>
-            </div>
-            
-            <div class="mb-3">
-                <label for="signupEmail" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="signupEmail" placeholder="name@school.edu" required>
-            </div>
-            
-            <div class="mb-3">
-                <label for="signupPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="signupPassword" placeholder="Create a password" required>
-            </div>
-            
-            <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
-            </div>
-            
-            <div class="mb-3">
-                <label for="userType" class="form-label">User Type</label>
-                <select class="form-select" id="userType">
-                    <option selected>Student</option>
-                    <option>Teacher</option>
-                    <option>Staff</option>
-                </select>
-            </div>
-            
-            <div class="admin-option">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="adminSignup">
-                    <label class="form-check-label" for="adminSignup">Request administrator access (requires verification)</label>
-                </div>
-            </div>
-            
-            <div class="d-grid gap-2 mt-4">
-                <button type="submit" class="btn btn-primary">Create Account</button>
-            </div>
-            
-            <div class="mt-3 text-center">
-                <a href="#" class="toggle-link" onclick="toggleForms()">Already have an account? Sign in</a>
-            </div>
-        </form>
-    </div>
-
     <!-- Admin Login Form -->
     <div class="container admin-login-container" id="adminLoginForm" style="display: none;">
         <div class="logo">
