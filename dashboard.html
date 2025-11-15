@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPortal - User Management Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-black: #000000;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2d2d2d;
+            --light-gray: #404040;
+            --accent-red: #dc2626;
+            --accent-red-dark: #b91c1c;
+            --text-light: #f8fafc;
+            --text-gray: #cbd5e1;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--primary-black);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--dark-gray);
+            border-right: 1px solid var(--light-gray);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            padding-top: 20px;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar.collapsed .nav-link span {
+            display: none;
+        }
+
+        .sidebar.collapsed .logo-text {
+            display: none;
+        }
+
+        .sidebar.collapsed .nav-link {
+            justify-content: center;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--light-gray);
+            margin-bottom: 20px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .nav-link {
+            color: var(--text-gray);
+            padding: 12px 20px;
+            margin: 5px 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--medium-gray);
+            color: var(--text-light);
+        }
+
+        .nav-link.active {
+            border-left: 3px solid var(--accent-red);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .main-content.expanded {
+            margin-left: 70px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background-color: var(--dark-gray);
+            border-bottom: 1px solid var(--light-gray);
+            padding: 15px 0;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--dark-gray);
+            border: 1px solid var(--light-gray);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-red);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            background-color: var(--medium-gray);
+            border-bottom: 1px solid var(--light-gray);
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-red);
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Tables */
+        .table {
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background-color: var(--medium-gray);
+            border-color: var(--light-gray);
+            font-weight: 600;
+        }
+
+        .table td {
+            border-color: var(--light-gray);
+            vertical-align: middle;
+        }
+
+        .badge {
+            font-weight: 500;
+            padding: 6px 10px;
+        }
+
+        .badge-success {
+            background-color: #16a34a;
+        }
+
+        .badge-warning {
+            background-color: #d97706;
+        }
+
+        .badge-danger {
+            background-color: var(--accent-red);
+        }
+
+        /* Buttons */
+        .btn-accent {
+            background-color: var(--accent-red);
+            border-color: var(--accent-red);
+            color: var(--text-light);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-accent:hover {
+            background-color: var(--accent-red-dark);
+            border-color: var(--accent-red-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-accent {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-accent:hover {
+            background-color: var(--accent-red);
+            border-color: var(--accent-red);
+            color: var(--text-light);
+            transform: translateY(-1px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar .nav-link span {
+                display: none;
+            }
+            
+            .sidebar .logo-text {
+                display: none;
+            }
+            
+            .sidebar .nav-link {
+                justify-content: center;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .main-content.expanded {
+                margin-left: 250px;
+            }
+        }
+
+        /* Tabs */
+        .nav-tabs {
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .nav-tabs .nav-link {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            border-radius: 0;
+            margin: 0;
+            padding: 12px 20px;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: none;
+            color: var(--accent-red);
+            border-bottom: 2px solid var(--accent-red);
+        }
+
+        .tab-content {
+            padding: 20px 0;
+        }
+
+        /* Search Box */
+        .search-box {
+            background-color: var(--medium-gray);
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            padding: 8px 15px;
+            color: var(--text-light);
+        }
+
+        .search-box:focus {
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-graduation-cap text-danger me-2 fs-4"></i>
+                <span class="logo-text">EduPortal</span>
+            </div>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Students</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-users"></i>
+                    <span>Parents</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Teachers</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Admins</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-cogs"></i>
+                    <span>User Management</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Audit Logs</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="toggle-btn me-3" id="sidebarToggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h4 class="mb-0">Dashboard</h4>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-avatar">AJ</div>
+                        <div>
+                            <div class="fw-bold">Admin User</div>
+                            <small class="text-gray">Administrator</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="container-fluid">
+            <!-- Stats Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card stat-card">
+                        <div class="stat-number">1,254</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card">
+                        <div class="stat-number">342</div>
+                        <div class="stat-label">Total Teachers</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card">
+                        <div class="stat-number">986</div>
+                        <div class="stat-label">Total Parents</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card">
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">System Admins</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity and User Management -->
+            <div class="row g-4">
+                <!-- Recent Activity -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Recent Activity</span>
+                            <button class="btn btn-sm btn-outline-accent">View All</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Action</th>
+                                            <th>Time</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>John Smith</td>
+                                            <td>Updated profile information</td>
+                                            <td>10:25 AM</td>
+                                            <td><span class="badge badge-success">Completed</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sarah Johnson</td>
+                                            <td>Added new student record</td>
+                                            <td>09:45 AM</td>
+                                            <td><span class="badge badge-success">Completed</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Michael Brown</td>
+                                            <td>Password reset request</td>
+                                            <td>09:15 AM</td>
+                                            <td><span class="badge badge-warning">Pending</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Emily Davis</td>
+                                            <td>Role permissions updated</td>
+                                            <td>Yesterday</td>
+                                            <td><span class="badge badge-success">Completed</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Robert Wilson</td>
+                                            <td>Failed login attempt</td>
+                                            <td>Yesterday</td>
+                                            <td><span class="badge badge-danger">Security</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">Quick Actions</div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-accent mb-2">
+                                    <i class="fas fa-plus me-2"></i> Add New User
+                                </button>
+                                <button class="btn btn-outline-accent mb-2">
+                                    <i class="fas fa-file-export me-2"></i> Export Data
+                                </button>
+                                <button class="btn btn-outline-accent mb-2">
+                                    <i class="fas fa-cog me-2"></i> System Settings
+                                </button>
+                                <button class="btn btn-outline-accent">
+                                    <i class="fas fa-shield-alt me-2"></i> Security Settings
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Status -->
+                    <div class="card mt-4">
+                        <div class="card-header">User Status Overview</div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Active Users</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Inactive Users</span>
+                                    <span>10%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-warning" style="width: 10%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Suspended Users</span>
+                                    <span>5%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-danger" style="width: 5%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management Section -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>User Management</span>
+                            <div class="d-flex gap-2">
+                                <input type="text" class="form-control search-box" placeholder="Search users...">
+                                <button class="btn btn-accent btn-sm">
+                                    <i class="fas fa-search me-1"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="nav nav-tabs" id="userManagementTabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#students">Students</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#teachers">Teachers</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#parents">Parents</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#admins">Admins</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="userManagementContent">
+                                <div class="tab-pane fade show active" id="students">
+                                    <p>Student management content goes here. You can view, add, edit, and remove student records.</p>
+                                    <button class="btn btn-accent">
+                                        <i class="fas fa-plus me-1"></i> Add Student
+                                    </button>
+                                </div>
+                                <div class="tab-pane fade" id="teachers">
+                                    <p>Teacher management content goes here. Manage teacher profiles, assignments, and permissions.</p>
+                                    <button class="btn btn-accent">
+                                        <i class="fas fa-plus me-1"></i> Add Teacher
+                                    </button>
+                                </div>
+                                <div class="tab-pane fade" id="parents">
+                                    <p>Parent management content goes here. Link parents to students and manage communication preferences.</p>
+                                    <button class="btn btn-accent">
+                                        <i class="fas fa-plus me-1"></i> Add Parent
+                                    </button>
+                                </div>
+                                <div class="tab-pane fade" id="admins">
+                                    <p>Admin management content goes here. Control system access and administrative privileges.</p>
+                                    <button class="btn btn-accent">
+                                        <i class="fas fa-plus me-1"></i> Add Admin
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar toggle functionality
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        });
+
+        // Simulate loading animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>
