@@ -24,19 +24,65 @@
                 color: var(--gray-dark);
             }
             
+            /* Navbar Styles */
+            .navbar {
+                background-color: white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                padding: 0.8rem 1rem;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1030;
+            }
+            
+            .navbar-brand {
+                font-weight: 700;
+                color: var(--purple-primary) !important;
+            }
+            
+            .nav-link {
+                color: var(--gray-dark) !important;
+                font-weight: 500;
+            }
+            
+            .nav-link:hover {
+                color: var(--purple-primary) !important;
+            }
+            
+            .btn-primary {
+                background-color: var(--purple-primary);
+                border-color: var(--purple-primary);
+            }
+            
+            .btn-primary:hover {
+                background-color: var(--purple-dark);
+                border-color: var(--purple-dark);
+            }
+            
+            .btn-outline-primary {
+                color: var(--purple-primary);
+                border-color: var(--purple-primary);
+            }
+            
+            .btn-outline-primary:hover {
+                background-color: var(--purple-primary);
+                color: white;
+            }
+            
             /* Sidebar Styles */
             .sidebar {
                 background-color: white;
                 border-right: 1px solid var(--border-color);
-                height: 100vh;
+                height: calc(100vh - 56px);
                 position: fixed;
-                top: 0;
+                top: 56px;
                 left: 0;
                 width: 250px;
                 transition: all 0.3s ease;
-                z-index: 1000;
+                z-index: 1020;
                 padding-top: 20px;
-                box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+                overflow-y: auto;
             }
             
             .sidebar.collapsed {
@@ -47,24 +93,9 @@
                 display: none;
             }
             
-            .sidebar.collapsed .logo-text {
-                display: none;
-            }
-            
             .sidebar.collapsed .nav-link {
                 justify-content: center;
                 padding: 12px;
-            }
-            
-            .sidebar-header {
-                padding: 0 20px 20px;
-                border-bottom: 1px solid var(--border-color);
-                margin-bottom: 20px;
-            }
-            
-            .logo-text {
-                font-weight: 700;
-                color: var(--purple-primary);
             }
             
             .nav-link {
@@ -96,8 +127,10 @@
             /* Main Content */
             .main-content {
                 margin-left: 250px;
+                margin-top: 56px;
                 transition: all 0.3s ease;
                 padding: 20px;
+                min-height: calc(100vh - 56px);
             }
             
             .main-content.expanded {
@@ -207,27 +240,6 @@
                 background-color: var(--purple-primary);
             }
             
-            /* Buttons */
-            .btn-primary {
-                background-color: var(--purple-primary);
-                border-color: var(--purple-primary);
-            }
-            
-            .btn-primary:hover {
-                background-color: var(--purple-dark);
-                border-color: var(--purple-dark);
-            }
-            
-            .btn-outline-primary {
-                color: var(--purple-primary);
-                border-color: var(--purple-primary);
-            }
-            
-            .btn-outline-primary:hover {
-                background-color: var(--purple-primary);
-                color: white;
-            }
-            
             /* Responsive */
             @media (max-width: 768px) {
                 .sidebar {
@@ -235,10 +247,6 @@
                 }
                 
                 .sidebar .nav-link span {
-                    display: none;
-                }
-                
-                .sidebar .logo-text {
                     display: none;
                 }
                 
@@ -253,18 +261,53 @@
                 .main-content.expanded {
                     margin-left: 250px;
                 }
+                
+                .navbar-nav .nav-item {
+                    margin: 0.25rem 0;
+                }
             }
         </style>
     </head>
     <body>
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-graduation-cap me-2 fs-4" style="color: var(--purple-primary);"></i>
-                    <span class="logo-text">EduPortal</span>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    EduPortal
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-cog"></i></a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <div class="user-info">
+                                    <div class="user-avatar">AJ</div>
+                                    <span>Admin User</span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </nav>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar" style="padding-top: 60px;">
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">
@@ -312,7 +355,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="main-content" id="mainContent">
+        <div class="main-content" id="mainContent" style="padding-top: 60px;">
             <!-- Top Bar -->
             <div class="top-bar">
                 <div class="container-fluid">
@@ -323,12 +366,13 @@
                             </button>
                             <h4 class="mb-0">Dashboard Overview</h4>
                         </div>
-                        <div class="user-info">
-                            <div class="user-avatar">AJ</div>
-                            <div>
-                                <div class="fw-bold">Admin User</div>
-                                <small class="text-muted">Administrator</small>
-                            </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-sync-alt me-1"></i> Refresh
+                            </button>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus me-1"></i> New User
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -386,31 +430,56 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>John Smith</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="user-avatar me-2" style="width: 30px; height: 30px; font-size: 0.8rem;">JS</div>
+                                                        John Smith
+                                                    </div>
+                                                </td>
                                                 <td>Updated profile information</td>
                                                 <td>10:25 AM</td>
                                                 <td><span class="badge badge-success">Completed</span></td>
                                             </tr>
                                             <tr>
-                                                <td>Sarah Johnson</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="user-avatar me-2" style="width: 30px; height: 30px; font-size: 0.8rem; background-color: #28a745;">SJ</div>
+                                                        Sarah Johnson
+                                                    </div>
+                                                </td>
                                                 <td>Added new student record</td>
                                                 <td>09:45 AM</td>
                                                 <td><span class="badge badge-success">Completed</span></td>
                                             </tr>
                                             <tr>
-                                                <td>Michael Brown</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="user-avatar me-2" style="width: 30px; height: 30px; font-size: 0.8rem; background-color: #ffc107; color: #212529;">MB</div>
+                                                        Michael Brown
+                                                    </div>
+                                                </td>
                                                 <td>Password reset request</td>
                                                 <td>09:15 AM</td>
                                                 <td><span class="badge badge-warning">Pending</span></td>
                                             </tr>
                                             <tr>
-                                                <td>Emily Davis</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="user-avatar me-2" style="width: 30px; height: 30px; font-size: 0.8rem; background-color: #17a2b8;">ED</div>
+                                                        Emily Davis
+                                                    </div>
+                                                </td>
                                                 <td>Role permissions updated</td>
                                                 <td>Yesterday</td>
                                                 <td><span class="badge badge-success">Completed</span></td>
                                             </tr>
                                             <tr>
-                                                <td>Robert Wilson</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="user-avatar me-2" style="width: 30px; height: 30px; font-size: 0.8rem; background-color: #dc3545;">RW</div>
+                                                        Robert Wilson
+                                                    </div>
+                                                </td>
                                                 <td>Failed login attempt</td>
                                                 <td>Yesterday</td>
                                                 <td><span class="badge badge-purple">Security</span></td>
@@ -422,7 +491,7 @@
                         </div>
                     </div>
 
-                    <!-- Quick Actions -->
+                    <!-- Quick Actions & Status -->
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-header">Quick Actions</div>
