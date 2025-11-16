@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School User Management - Teachers</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root{
+            --p-color:rgb(54, 15, 90);
+        }
+        body{
+            overflow-x: hidden;
+        }
+        .p-btn{
+            color:var(--p-color);
+            border: 1px solid var(--p-color) ;
+        }
+        .p-btn:hover{
+            background-color: var(--p-color);
+            border: 1px solid white;
+            color: white;
+        }
+        .sidebar {
+            width: 180px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+            padding: 1rem;
+        }
+
+        .sidebar h5 {
+            color: var(--p-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar .nav-link {
+            color: #555;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color:var(--p-color);
+            color: white;
+        }
+        .main-content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+        .teacher-card {
+            border-left: 4px solid var(--p-color);
+            transition: transform 0.2s;
+        }
+        .teacher-card:hover {
+            transform: translateY(-5px);
+        }
+        .teacher-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--p-color);
+        }
+        .filter-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--p-color); padding-left: 180px;">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-mortarboard-fill me-2"></i>
+                School User Management
+            </a>
+
+            <!-- User profile section -->
+            <div class="navbar-nav">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                            <i class="bi bi-person-fill" style="color: var(--p-color);"></i>
+                        </div>
+                        Admin User
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">
+                            <i class="bi bi-person me-2"></i>
+                            Profile
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="bi bi-gear me-2"></i>
+                            Settings
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#">
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            Logout
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h5>Navigation</h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-people me-2"></i>
+                    Students
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="bi bi-person-badge me-2"></i>
+                    Teachers
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-journal-text me-2"></i>
+                    Classes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-graph-up me-2"></i>
+                    Reports
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Page content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="fw-bold">Teacher Management</h1>
+                <p class="text-muted">Manage all teacher records, profiles, and assignments</p>
+            </div>
+            <div class="col-auto">
+                <button class="btn p-btn">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Add New Teacher
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Search Teachers</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search by name or ID">
+                        <button class="btn p-btn" type="button">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Department</label>
+                    <select class="form-select">
+                        <option selected>All Departments</option>
+                        <option>Science</option>
+                        <option>Mathematics</option>
+                        <option>Languages</option>
+                        <option>Arts</option>
+                        <option>Physical Education</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Subjects</label>
+                    <select class="form-select">
+                        <option selected>All Subjects</option>
+                        <option>Physics</option>
+                        <option>Chemistry</option>
+                        <option>Biology</option>
+                        <option>Mathematics</option>
+                        <option>English</option>
+                        <option>History</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-select">
+                        <option selected>All Status</option>
+                        <option>Active</option>
+                        <option>On Leave</option>
+                        <option>Part-time</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card teacher-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title text-muted">Total Teachers</h5>
+                                <h2 class="fw-bold">48</h2>
+                            </div>
+                            <div class="bg-light rounded-circle p-3">
+                                <i class="bi bi-person-badge fs-4" style="color: var(--p-color);"></i>
+                            </div>
+                        </div>
+                        <p class="card-text text-success">
+                            <i class="bi bi-arrow-up"></i>
+                            2 new this month
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card teacher-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title text-muted">Active Teachers</h5>
+                                <h2 class="fw-bold">42</h2>
+                            </div>
+                            <div class="bg-light rounded-circle p-3">
+                                <i class="bi bi-check-circle fs-4" style="color: var(--p-color);"></i>
+                            </div>
+                        </div>
+                        <p class="card-text text-success">87.5% of total</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card teacher-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title text-muted">Avg. Experience</h5>
+                                <h2 class="fw-bold">8.2</h2>
+                            </div>
+                            <div class="bg-light rounded-circle p-3">
+                                <i class="bi bi-award fs-4" style="color: var(--p-color);"></i>
+                            </div>
+                        </div>
+                        <p class="card-text text-muted">Years</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card teacher-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title text-muted">Classes Assigned</h5>
+                                <h2 class="fw-bold">64</h2>
+                            </div>
+                            <div class="bg-light rounded-circle p-3">
+                                <i class="bi bi-journal-text fs-4" style="color: var(--p-color);"></i>
+                            </div>
+                        </div>
+                        <p class="card-text text-info">This semester</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher List Table -->
+        <div class="card">
+            <div class="card-header" style="background-color: var(--p-color); color: white;">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-ul me-2"></i>
+                    Teacher List
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Teacher ID</th>
+                                <th>Teacher Name</th>
+                                <th>Department</th>
+                                <th>Subjects</th>
+                                <th>Contact</th>
+                                <th>Join Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TCH-001</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="teacher-avatar me-3">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">Dr. Robert Johnson</div>
+                                            <small class="text-muted">r.johnson@school.edu</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Science</td>
+                                <td>Physics, Chemistry</td>
+                                <td>(555) 123-4567</td>
+                                <td>Aug 15, 2018</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>TCH-002</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="teacher-avatar me-3">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">Prof. Sarah Williams</div>
+                                            <small class="text-muted">s.williams@school.edu</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Mathematics</td>
+                                <td>Algebra, Calculus</td>
+                                <td>(555) 987-6543</td>
+                                <td>Jan 10, 2020</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>TCH-003</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="teacher-avatar me-3">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">Ms. Jennifer Lee</div>
+                                            <small class="text-muted">j.lee@school.edu</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Languages</td>
+                                <td>English Literature</td>
+                                <td>(555) 456-7890</td>
+                                <td>Mar 05, 2019</td>
+                                <td><span class="badge bg-warning">On Leave</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>TCH-004</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="teacher-avatar me-3">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">Mr. David Chen</div>
+                                            <small class="text-muted">d.chen@school.edu</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Science</td>
+                                <td>Biology, Environmental Science</td>
+                                <td>(555) 234-5678</td>
+                                <td>Aug 20, 2021</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>TCH-005</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="teacher-avatar me-3">
+                                            <i class="bi bi-person-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">Mrs. Maria Garcia</div>
+                                            <small class="text-muted">m.garcia@school.edu</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Arts</td>
+                                <td>Music, Drama</td>
+                                <td>(555) 345-6789</td>
+                                <td>Sep 12, 2017</td>
+                                <td><span class="badge bg-info">Part-time</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm p-btn">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <nav aria-label="Teacher pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
