@@ -3,376 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School User Management Dashboard</title>
+    <title>School User Management</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root{
+            --p-color:rgb(54, 15, 90);
+        }
+        body{
+            overflow-x: hidden;
+        }
+        .p-btn{
+            color:var(--p-color);
+            border: 1px solid var(--p-color) ;
+        }
+        .p-btn:hover{
+            background-color: var(--p-color);
+            border: 1px solid white;
+            color: white;
         }
         .sidebar {
-            background-color: #343a40;
-            color: white;
+            width: 180px;
             height: 100vh;
             position: fixed;
+            top: 0;
+            left: 0;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+            padding: 1rem;
         }
+
+        .sidebar h5 {
+            color: var(--p-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
         .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 12px 20px;
-            border-radius: 5px;
+            color: #555;
+            border-radius: 8px;
             margin-bottom: 5px;
         }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            background-color: #495057;
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color:var(--p-color);
             color: white;
         }
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-        .dashboard-header {
-            background-color: white;
+        
+        /* Chart Styles */
+        .chart-container {
+            background: white;
             border-radius: 10px;
-            padding: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
-        .stat-card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            height: 100%;
+        
+        .chart-title {
+            color: var(--p-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
-        .graph-container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            height: 100%;
+        
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 200px;
+            padding: 0 1rem;
+            gap: 15px;
         }
-        .user-role-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
+        
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--p-color), #7c3aed);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 10px;
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
             font-size: 0.8rem;
+            color: #666;
         }
-        .badge-admin {
-            background-color: #dc3545;
-            color: white;
+        
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-weight: bold;
+            color: var(--p-color);
         }
-        .badge-teacher {
-            background-color: #0d6efd;
-            color: white;
+        
+        .pie-chart {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #4f46e5 0% 35%,
+                #10b981 35% 65%,
+                #f59e0b 65% 85%,
+                #ef4444 85% 100%
+            );
+            margin: 0 auto;
+            position: relative;
         }
-        .badge-student {
-            background-color: #198754;
-            color: white;
+        
+        .pie-center {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--p-color);
         }
-        .badge-parent {
-            background-color: #6f42c1;
-            color: white;
+        
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+            gap: 10px;
         }
-        .recent-activity {
-            max-height: 300px;
-            overflow-y: auto;
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            margin-right: 10px;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 5px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--p-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .stat-change.positive {
+            color: #10b981;
+        }
+        
+        .stat-change.negative {
+            color: #ef4444;
         }
     </style>
 </head>
+
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <h4 class="text-center mb-4">School Admin</h4>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">
-                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-users me-2"></i> User Management
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-chart-bar me-2"></i> Reports
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-cog me-2"></i> Settings
-                            </a>
-                        </li>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--p-color); padding-left: 180px;">
+        <div class="container">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-mortarboard-fill me-2"></i>
+                School User Management
+            </a>
+
+            <!-- User profile section -->
+            <div class="navbar-nav">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                            <i class="bi bi-person-fill" style="color: var(--p-color);"></i>
+                        </div>
+                        Admin User
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">
+                            <i class="bi bi-person me-2"></i>
+                            Profile
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="bi bi-gear me-2"></i>
+                            Settings
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#">
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            Logout
+                        </a></li>
                     </ul>
                 </div>
             </div>
+        </div>
+    </nav>
 
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 main-content">
-                <div class="dashboard-header">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h2>User Management Dashboard</h2>
-                            <p class="text-muted">Welcome back, School Administrator</p>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h5>Navigation</h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-people me-2"></i>
+                    Students
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-person-badge me-2"></i>
+                    Teachers
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-journal-text me-2"></i>
+                    Classes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-graph-up me-2"></i>
+                    Reports
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Page content -->
+    <div class="container mt-4" style="margin-left: 200px;">
+        <div class="row">
+            <div class="col">
+                <h2 class="mb-4" style="color: var(--p-color);">Dashboard Overview</h2>
+                
+                <!-- Statistics Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-value">1,254</div>
+                            <div class="stat-label">Total Students</div>
+                            <div class="stat-change positive">
+                                <i class="bi bi-arrow-up"></i> 5.2% from last month
+                            </div>
                         </div>
-                        <div class="col-md-6 text-end">
-                            <button class="btn btn-primary">Add New User</button>
-                            <button class="btn btn-outline-secondary">Generate Report</button>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-value">84</div>
+                            <div class="stat-label">Total Teachers</div>
+                            <div class="stat-change positive">
+                                <i class="bi bi-arrow-up"></i> 2.4% from last month
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-value">42</div>
+                            <div class="stat-label">Classes</div>
+                            <div class="stat-change positive">
+                                <i class="bi bi-arrow-up"></i> 1 new class
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-value">96.5%</div>
+                            <div class="stat-label">Attendance Rate</div>
+                            <div class="stat-change negative">
+                                <i class="bi bi-arrow-down"></i> 0.8% from last week
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Stats Cards -->
+                
+                <!-- Charts Row -->
                 <div class="row">
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="card-title">Total Users</h5>
-                                    <h2 class="text-primary">1,248</h2>
-                                </div>
-                                <div class="align-self-center">
-                                    <span class="badge bg-primary rounded-pill p-2">
-                                        <i class="fas fa-users"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="text-muted">+12% from last month</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="card-title">Active Today</h5>
-                                    <h2 class="text-success">842</h2>
-                                </div>
-                                <div class="align-self-center">
-                                    <span class="badge bg-success rounded-pill p-2">
-                                        <i class="fas fa-user-check"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="text-muted">+8% from yesterday</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="card-title">New Registrations</h5>
-                                    <h2 class="text-info">34</h2>
-                                </div>
-                                <div class="align-self-center">
-                                    <span class="badge bg-info rounded-pill p-2">
-                                        <i class="fas fa-user-plus"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="text-muted">This week</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="card-title">Pending Actions</h5>
-                                    <h2 class="text-warning">16</h2>
-                                </div>
-                                <div class="align-self-center">
-                                    <span class="badge bg-warning rounded-pill p-2">
-                                        <i class="fas fa-exclamation-circle"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <p class="text-muted">Require attention</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Graphs and Charts -->
-                <div class="row mt-4">
-                    <div class="col-md-8">
-                        <div class="graph-container">
-                            <h5>User Distribution by Role</h5>
-                            <canvas id="roleDistributionChart" height="250"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="graph-container">
-                            <h5>User Activity Status</h5>
-                            <canvas id="activityStatusChart" height="250"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt-4">
+                    <!-- Student Distribution Chart -->
                     <div class="col-md-6">
-                        <div class="graph-container">
-                            <h5>Monthly User Registrations</h5>
-                            <canvas id="monthlyRegistrationsChart" height="250"></canvas>
+                        <div class="chart-container">
+                            <h5 class="chart-title">Student Distribution by Grade</h5>
+                            <div class="bar-chart">
+                                <div class="bar" style="height: 85%;">
+                                    <div class="bar-value">425</div>
+                                    <div class="bar-label">Grade 9</div>
+                                </div>
+                                <div class="bar" style="height: 75%;">
+                                    <div class="bar-value">375</div>
+                                    <div class="bar-label">Grade 10</div>
+                                </div>
+                                <div class="bar" style="height: 65%;">
+                                    <div class="bar-value">325</div>
+                                    <div class="bar-label">Grade 11</div>
+                                </div>
+                                <div class="bar" style="height: 55%;">
+                                    <div class="bar-value">275</div>
+                                    <div class="bar-label">Grade 12</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- Teacher Subjects Chart -->
                     <div class="col-md-6">
-                        <div class="graph-container">
-                            <h5>Recent Activity</h5>
-                            <div class="recent-activity">
-                                <div class="d-flex border-bottom py-3">
-                                    <div class="flex-shrink-0">
-                                        <span class="badge bg-primary rounded-circle p-2">JD</span>
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-0">John Doe registered</h6>
-                                        <p class="text-muted mb-0">2 minutes ago</p>
-                                    </div>
+                        <div class="chart-container">
+                            <h5 class="chart-title">Teachers by Subject</h5>
+                            <div class="pie-chart">
+                                <div class="pie-center">84</div>
+                            </div>
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #4f46e5;"></div>
+                                    <span>Math & Science (35%)</span>
                                 </div>
-                                <div class="d-flex border-bottom py-3">
-                                    <div class="flex-shrink-0">
-                                        <span class="badge bg-success rounded-circle p-2">AS</span>
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-0">Alice Smith updated profile</h6>
-                                        <p class="text-muted mb-0">15 minutes ago</p>
-                                    </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #10b981;"></div>
+                                    <span>Languages (30%)</span>
                                 </div>
-                                <div class="d-flex border-bottom py-3">
-                                    <div class="flex-shrink-0">
-                                        <span class="badge bg-warning rounded-circle p-2">RJ</span>
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-0">Robert Johnson password reset</h6>
-                                        <p class="text-muted mb-0">1 hour ago</p>
-                                    </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #f59e0b;"></div>
+                                    <span>Arts & Humanities (20%)</span>
                                 </div>
-                                <div class="d-flex border-bottom py-3">
-                                    <div class="flex-shrink-0">
-                                        <span class="badge bg-info rounded-circle p-2">MJ</span>
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-0">Maria Garcia role changed to Teacher</h6>
-                                        <p class="text-muted mb-0">2 hours ago</p>
-                                    </div>
-                                </div>
-                                <div class="d-flex py-3">
-                                    <div class="flex-shrink-0">
-                                        <span class="badge bg-danger rounded-circle p-2">DW</span>
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-0">David Wilson account deactivated</h6>
-                                        <p class="text-muted mb-0">5 hours ago</p>
-                                    </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #ef4444;"></div>
+                                    <span>Other (15%)</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
+                
+                <!-- Additional Charts Row -->
+                <div class="row mt-4">
+                    <!-- Student Gender Distribution -->
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <h5 class="chart-title">Student Gender Distribution</h5>
+                            <div class="bar-chart">
+                                <div class="bar" style="height: 90%; background: linear-gradient(to top, #4f46e5, #7c3aed);">
+                                    <div class="bar-value">52%</div>
+                                    <div class="bar-label">Female</div>
+                                </div>
+                                <div class="bar" style="height: 80%; background: linear-gradient(to top, #10b981, #34d399);">
+                                    <div class="bar-value">48%</div>
+                                    <div class="bar-label">Male</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Teacher Experience -->
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <h5 class="chart-title">Teacher Experience Distribution</h5>
+                            <div class="bar-chart">
+                                <div class="bar" style="height: 40%;">
+                                    <div class="bar-value">15</div>
+                                    <div class="bar-label">0-5 yrs</div>
+                                </div>
+                                <div class="bar" style="height: 60%;">
+                                    <div class="bar-value">22</div>
+                                    <div class="bar-label">6-10 yrs</div>
+                                </div>
+                                <div class="bar" style="height: 80%;">
+                                    <div class="bar-value">29</div>
+                                    <div class="bar-label">11-15 yrs</div>
+                                </div>
+                                <div class="bar" style="height: 70%;">
+                                    <div class="bar-value">18</div>
+                                    <div class="bar-label">16+ yrs</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
-    <script>
-        // Role Distribution Chart
-        const roleCtx = document.getElementById('roleDistributionChart').getContext('2d');
-        const roleChart = new Chart(roleCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Students', 'Teachers', 'Parents', 'Administrators'],
-                datasets: [{
-                    label: 'Number of Users',
-                    data: [850, 120, 250, 28],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(255, 159, 64, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Activity Status Chart
-        const activityCtx = document.getElementById('activityStatusChart').getContext('2d');
-        const activityChart = new Chart(activityCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Active', 'Inactive', 'Suspended'],
-                datasets: [{
-                    data: [842, 356, 50],
-                    backgroundColor: [
-                        'rgba(40, 167, 69, 0.7)',
-                        'rgba(108, 117, 125, 0.7)',
-                        'rgba(220, 53, 69, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(40, 167, 69, 1)',
-                        'rgba(108, 117, 125, 1)',
-                        'rgba(220, 53, 69, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-
-        // Monthly Registrations Chart
-        const monthlyCtx = document.getElementById('monthlyRegistrationsChart').getContext('2d');
-        const monthlyChart = new Chart(monthlyCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'New Registrations',
-                    data: [65, 59, 80, 81, 56, 55, 40, 48, 76, 65, 59, 80],
-                    fill: false,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
 </body>
 </html>
