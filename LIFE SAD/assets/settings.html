@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School User Management - Admin Settings</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root{
+            --p-color:rgb(54, 15, 90);
+        }
+        body{
+            overflow-x: hidden;
+            background-color: #f8f9fa;
+        }
+        .p-btn{
+            color:var(--p-color);
+            border: 1px solid var(--p-color) ;
+        }
+        .p-btn:hover{
+            background-color: var(--p-color);
+            border: 1px solid white;
+            color: white;
+        }
+        .sidebar {
+            background-color: var(--p-color);
+            color: white;
+            width: 180px;
+            height: 100vh;
+            padding: 1 rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        .main-content {
+            padding: 20px;
+            margin-left: 200px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e3e6f0;
+            font-weight: 600;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .settings-section {
+            margin-bottom: 30px;
+        }
+        .settings-section h5 {
+            color: var(--p-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--p-color);
+            font-weight: 600;
+            border-bottom: 2px solid var(--p-color);
+        }
+        .nav-tabs .nav-link {
+            color: #6c757d;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            color: var(--p-color);
+        }
+        .logo-container {
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .user-info {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+        <div class="sidebar">
+            <h5>Navigation</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="dashboard.html">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="student.html">
+                        <i class="bi bi-people me-2"></i>
+                        Students
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="teacher.html">
+                        <i class="bi bi-person-badge me-2"></i>
+                        Teachers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="classes.html">
+                        <i class="bi bi-journal-text me-2"></i>
+                        Classes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="audit-logs.html">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Reports
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 ms-sm-auto main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">System Settings</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button class="btn p-btn me-2">
+                            <i class="bi bi-download"></i> Export Settings
+                        </button>
+                        <button class="btn text-white" style="background-color: var(--p-color);">
+                            <i class="bi bi-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Settings Tabs -->
+                <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">General</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">User Management</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">Security</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab">Notifications</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="backup-tab" data-bs-toggle="tab" data-bs-target="#backup" type="button" role="tab">Backup & Restore</button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="settingsTabsContent">
+                    <!-- General Settings -->
+                    <div class="tab-pane fade show active" id="general" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">School Information</div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="schoolName" class="form-label">School Name</label>
+                                            <input type="text" class="form-control" id="schoolName" value="Greenwood High School">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="schoolAddress" class="form-label">School Address</label>
+                                            <textarea class="form-control" id="schoolAddress" rows="2">123 Education Lane, Learning City</textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="schoolPhone" class="form-label">Phone Number</label>
+                                            <input type="text" class="form-control" id="schoolPhone" value="(555) 123-4567">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="schoolEmail" class="form-label">Email Address</label>
+                                            <input type="email" class="form-control" id="schoolEmail" value="info@greenwood.edu">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">Academic Settings</div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="academicYear" class="form-label">Academic Year</label>
+                                            <select class="form-select" id="academicYear">
+                                                <option>2023-2024</option>
+                                                <option selected>2024-2025</option>
+                                                <option>2025-2026</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="gradingSystem" class="form-label">Grading System</label>
+                                            <select class="form-select" id="gradingSystem">
+                                                <option selected>Letter Grades (A-F)</option>
+                                                <option>Percentage (0-100)</option>
+                                                <option>GPA (4.0 Scale)</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="language" class="form-label">Default Language</label>
+                                            <select class="form-select" id="language">
+                                                <option selected>English</option>
+                                                <option>Spanish</option>
+                                                <option>French</option>
+                                                <option>German</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="timezone" class="form-label">Timezone</label>
+                                            <select class="form-select" id="timezone">
+                                                <option>Eastern Time (ET)</option>
+                                                <option selected>Central Time (CT)</option>
+                                                <option>Mountain Time (MT)</option>
+                                                <option>Pacific Time (PT)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Management Settings -->
+                    <div class="tab-pane fade" id="users" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">User Registration</div>
+                                    <div class="card-body">
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="selfRegistration" checked>
+                                            <label class="form-check-label" for="selfRegistration">Allow self-registration for parents/students</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="emailVerification" checked>
+                                            <label class="form-check-label" for="emailVerification">Require email verification</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="defaultRole" class="form-label">Default User Role</label>
+                                            <select class="form-select" id="defaultRole">
+                                                <option>Student</option>
+                                                <option selected>Parent</option>
+                                                <option>Teacher</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">User Permissions</div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Teacher Permissions</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="gradePermission" checked>
+                                                <label class="form-check-label" for="gradePermission">Can input grades</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="attendancePermission" checked>
+                                                <label class="form-check-label" for="attendancePermission">Can mark attendance</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="communicationPermission" checked>
+                                                <label class="form-check-label" for="communicationPermission">Can communicate with parents</label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Parent Permissions</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="viewGradesPermission" checked>
+                                                <label class="form-check-label" for="viewGradesPermission">Can view student grades</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="viewAttendancePermission" checked>
+                                                <label class="form-check-label" for="viewAttendancePermission">Can view attendance</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="tab-pane fade" id="security" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">Password Policy</div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="minPasswordLength" class="form-label">Minimum Password Length</label>
+                                            <input type="number" class="form-control" id="minPasswordLength" value="8" min="6" max="20">
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="requireUppercase" checked>
+                                            <label class="form-check-label" for="requireUppercase">Require uppercase letters</label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="requireNumbers" checked>
+                                            <label class="form-check-label" for="requireNumbers">Require numbers</label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="requireSpecialChars">
+                                            <label class="form-check-label" for="requireSpecialChars">Require special characters</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="passwordExpiry" class="form-label">Password Expiry (days)</label>
+                                            <input type="number" class="form-control" id="passwordExpiry" value="90" min="30" max="365">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">Session & Login Security</div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="sessionTimeout" class="form-label">Session Timeout (minutes)</label>
+                                            <input type="number" class="form-control" id="sessionTimeout" value="30" min="5" max="240">
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="twoFactorAuth">
+                                            <label class="form-check-label" for="twoFactorAuth">Enable Two-Factor Authentication for Admins</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="loginNotifications" checked>
+                                            <label class="form-check-label" for="loginNotifications">Send email notifications for new logins</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="maxLoginAttempts" class="form-label">Max Login Attempts Before Lockout</label>
+                                            <input type="number" class="form-control" id="maxLoginAttempts" value="5" min="3" max="10">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notification Settings -->
+                    <div class="tab-pane fade" id="notifications" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">Email Notifications</div>
+                                    <div class="card-body">
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="gradeNotifications" checked>
+                                            <label class="form-check-label" for="gradeNotifications">Grade updates</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="attendanceNotifications" checked>
+                                            <label class="form-check-label" for="attendanceNotifications">Attendance alerts</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="assignmentNotifications" checked>
+                                            <label class="form-check-label" for="assignmentNotifications">New assignments</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="announcementNotifications" checked>
+                                            <label class="form-check-label" for="announcementNotifications">School announcements</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="eventNotifications">
+                                            <label class="form-check-label" for="eventNotifications">Upcoming events</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">SMS Notifications</div>
+                                    <div class="card-body">
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="smsAttendance" checked>
+                                            <label class="form-check-label" for="smsAttendance">Attendance alerts</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="smsEmergency">
+                                            <label class="form-check-label" for="smsEmergency">Emergency alerts</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="smsEvents">
+                                            <label class="form-check-label" for="smsEvents">Event reminders</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="smsTime" class="form-label">SMS Send Time</label>
+                                            <select class="form-select" id="smsTime">
+                                                <option>Immediately</option>
+                                                <option selected>Daily Digest (6 PM)</option>
+                                                <option>Weekly Digest (Sunday 6 PM)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Backup & Restore Settings -->
+                    <div class="tab-pane fade" id="backup" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">Backup Settings</div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="backupFrequency" class="form-label">Backup Frequency</label>
+                                            <select class="form-select" id="backupFrequency">
+                                                <option>Daily</option>
+                                                <option selected>Weekly</option>
+                                                <option>Monthly</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="backupTime" class="form-label">Backup Time</label>
+                                            <input type="time" class="form-control" id="backupTime" value="02:00">
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="autoBackup" checked>
+                                            <label class="form-check-label" for="autoBackup">Automatic backups</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="backupRetention" class="form-label">Backup Retention (days)</label>
+                                            <input type="number" class="form-control" id="backupRetention" value="30" min="7" max="365">
+                                        </div>
+                                        <button class="btn p-btn w-100">
+                                            <i class="bi bi-download"></i> Create Manual Backup
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">Restore Data</div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="backupFile" class="form-label">Select Backup File</label>
+                                            <input class="form-control" type="file" id="backupFile">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Restore Options</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="restoreOption" id="fullRestore" checked>
+                                                <label class="form-check-label" for="fullRestore">Full system restore</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="restoreOption" id="partialRestore">
+                                                <label class="form-check-label" for="partialRestore">Partial restore (user data only)</label>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-warning">
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+                                            <strong>Warning:</strong> Restoring from a backup will overwrite existing data. This action cannot be undone.
+                                        </div>
+                                        <button class="btn text-white w-100" style="background-color: var(--p-color);">
+                                            <i class="bi bi-arrow-clockwise"></i> Restore from Backup
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
