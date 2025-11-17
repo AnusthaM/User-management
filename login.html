@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School User Management - Login</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root{
+            --p-color:rgb(54, 15, 90);
+        }
+        body{
+            overflow-x: hidden;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .p-btn{
+            color:var(--p-color);
+            border: 1px solid var(--p-color) ;
+        }
+        .p-btn:hover{
+            background-color: var(--p-color);
+            border: 1px solid white;
+            color: white;
+        }
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo h2 {
+            color: var(--p-color);
+            font-weight: 700;
+        }
+        .form-control:focus {
+            border-color: var(--p-color);
+            box-shadow: 0 0 0 0.25rem rgba(54, 15, 90, 0.25);
+        }
+        .btn-primary {
+            background-color: var(--p-color);
+            border-color: var(--p-color);
+        }
+        .btn-primary:hover {
+            background-color: rgb(44, 10, 75);
+            border-color: rgb(44, 10, 75);
+        }
+        .toggle-link {
+            color: var(--p-color);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .toggle-link:hover {
+            text-decoration: underline;
+            color: rgb(44, 10, 75);
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .divider span {
+            padding: 0 10px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .role-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .role-option {
+            flex: 1;
+            text-align: center;
+            padding: 8px 5px;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .role-option:hover {
+            border-color: var(--p-color);
+            background: white;
+        }
+        .role-option.selected {
+            border-color: var(--p-color);
+            background: white;
+            color: var(--p-color);
+        }
+        .role-icon {
+            font-size: 1.2rem;
+            margin-bottom: 3px;
+            display: block;
+        }
+        .security-field {
+            display: none;
+        }
+        .role-description {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #6c757d;
+            min-height: 20px;
+        }
+        .alert {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Unified Login Form with Role Selection -->
+    <div class="login-container">
+        <div class="logo">
+            <h2>
+                <i class="bi bi-mortarboard-fill me-2"></i>
+                School User Management
+            </h2>
+            <p class="text-muted">Sign in to your account</p>
+        </div>
+        
+        <!-- Alert for login errors -->
+        <div class="alert alert-danger" id="loginAlert" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <span id="alertMessage">Invalid credentials. Please try again.</span>
+        </div>
+        
+        <!-- Role Selection -->
+        <div class="role-selector">
+            <div class="role-option selected" onclick="selectRole('student')">
+                <i class="bi bi-person role-icon"></i>
+                Student
+            </div>
+            <div class="role-option" onclick="selectRole('teacher')">
+                <i class="bi bi-person-badge role-icon"></i>
+                Teacher
+            </div>
+            <div class="role-option" onclick="selectRole('parent')">
+                <i class="bi bi-people role-icon"></i>
+                Parent
+            </div>
+            <div class="role-option" onclick="selectRole('admin')">
+                <i class="bi bi-shield-lock role-icon"></i>
+                Admin
+            </div>
+        </div>
+
+        <div class="role-description" id="roleDescription">
+            Access your student portal and learning resources
+        </div>
+        
+        <form id="loginForm">
+            <input type="hidden" id="selectedRole" name="role" value="student">
+            
+            <div class="mb-3">
+                <label for="loginEmail" class="form-label" id="emailLabel">Student Email</label>
+                <input type="email" class="form-control" id="loginEmail" placeholder="student@school.edu" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+            </div>
+            
+            <!-- Security Key Field (shown only for admin) -->
+            <div class="mb-3 security-field" id="securityField">
+                <label for="securityKey" class="form-label">Security Key</label>
+                <input type="password" class="form-control" id="securityKey" placeholder="Enter security key">
+            </div>
+            
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+            
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary" id="loginButton">Sign In as Student</button>
+            </div>
+            
+            <div class="forgot-password">
+                <a href="#" class="toggle-link">Forgot your password?</a>
+            </div>
+            
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <a class="d-grid gap-2 mb-2" href="landingpage.html#">
+                <button type="button" class="btn p-btn">
+                    Go Back
+                </button>
+            </a>
+        </form>
+    </div>
+
+    <script>
+        // Predefined user credentials for demonstration
+        const userCredentials = {
+            student: [
+                { email: 'student@school.edu', password: 'student123', name: 'John Student' },
+                { email: 'alice@school.edu', password: 'alice123', name: 'Alice Johnson' }
+            ],
+            teacher: [
+                { email: 'teacher@school.edu', password: 'teacher123', name: 'Mr. Smith' },
+                { email: 'msdavis@school.edu', password: 'davis123', name: 'Ms. Davis' }
+            ],
+            parent: [
+                { email: 'parent@email.com', password: 'parent123', name: 'Robert Parent' },
+                { email: 'wilson@email.com', password: 'wilson123', name: 'Mrs. Wilson' }
+            ],
+            admin: [
+                { email: 'admin@school.edu', password: 'admin123', securityKey: 'securekey2024', name: 'Admin User' }
+            ]
+        };
+
+        // Current selected role
+        let currentRole = 'student';
+
+        // Minimal JavaScript for role selection
+        function selectRole(role) {
+            // Update UI for selected role
+            document.querySelectorAll('.role-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            // Update form based on role
+            const emailInput = document.getElementById('loginEmail');
+            const emailLabel = document.getElementById('emailLabel');
+            const securityField = document.getElementById('securityField');
+            const loginButton = document.getElementById('loginButton');
+            const roleDescription = document.getElementById('roleDescription');
+            const selectedRoleInput = document.getElementById('selectedRole');
+            
+            selectedRoleInput.value = role;
+            currentRole = role;
+            
+            // Clear any previous error messages
+            hideAlert();
+            
+            // Update placeholder and label based on role
+            const roleConfig = {
+                student: { 
+                    placeholder: 'student@school.edu', 
+                    label: 'Student Email',
+                    description: 'Access your student portal and learning resources'
+                },
+                teacher: { 
+                    placeholder: 'teacher@school.edu', 
+                    label: 'Teacher Email',
+                    description: 'Access teacher dashboard and classroom tools'
+                },
+                parent: { 
+                    placeholder: 'parent@email.com', 
+                    label: 'Parent Email',
+                    description: 'Monitor your child\'s progress and school activities'
+                },
+                admin: { 
+                    placeholder: 'admin@school.edu', 
+                    label: 'Admin Email',
+                    description: 'Access administrative controls and system management'
+                }
+            };
+            
+            const config = roleConfig[role];
+            emailInput.placeholder = config.placeholder;
+            emailLabel.textContent = config.label;
+            roleDescription.textContent = config.description;
+            loginButton.textContent = `Sign In as ${role.charAt(0).toUpperCase() + role.slice(1)}`;
+            
+            // Show security field only for admin
+            if (role === 'admin') {
+                securityField.style.display = 'block';
+                document.getElementById('securityKey').setAttribute('required', 'required');
+            } else {
+                securityField.style.display = 'none';
+                document.getElementById('securityKey').removeAttribute('required');
+            }
+        }
+
+        // Show alert message
+        function showAlert(message) {
+            const alert = document.getElementById('loginAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            alertMessage.textContent = message;
+            alert.style.display = 'block';
+        }
+
+        // Hide alert message
+        function hideAlert() {
+            document.getElementById('loginAlert').style.display = 'none';
+        }
+
+        // Validate login credentials
+        function validateLogin(role, email, password, securityKey = '') {
+            const users = userCredentials[role];
+            if (!users) return false;
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            // For admin, also check security key
+            if (role === 'admin' && user) {
+                return user.securityKey === securityKey ? user : false;
+            }
+            
+            return user || false;
+        }
+
+        // Form submission handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const role = document.getElementById('selectedRole').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const securityKey = document.getElementById('securityKey').value;
+            
+            // Validate credentials
+            const user = validateLogin(role, email, password, securityKey);
+            
+            if (user) {
+                // Store user info in session storage for dashboard use
+                sessionStorage.setItem('currentUser', JSON.stringify({
+                    name: user.name,
+                    email: user.email,
+                    role: role
+                }));
+                
+                // Success - redirect to appropriate dashboard
+                showAlert(`Welcome back, ${user.name}! Redirecting...`, 'success');
+                
+                // Simulate loading before redirect
+                setTimeout(() => {
+                    if (role === 'admin') {
+                        window.location.href = 'LIFE SAD\ADMIN\dashboard.html';
+                    } else if (role === 'teacher') {
+                        window.location.href = './TEACHER/dashboard.html';
+                    } else if (role === 'parent') {
+                        window.location.href = './PARENT/dashboard.html';
+                    } else {
+                        window.location.href = './STUDENT/dashboard.html';
+                    }
+                }, 1500);
+            } else {
+                // Show error message
+                if (role === 'admin') {
+                    showAlert('Invalid admin credentials or security key. Please try again.');
+                } else {
+                    showAlert(`Invalid ${role} credentials. Please try again.`);
+                }
+                
+                // Clear password field
+                document.getElementById('loginPassword').value = '';
+                if (role === 'admin') {
+                    document.getElementById('securityKey').value = '';
+                }
+            }
+        });
+
+        // Demo credentials helper (for testing)
+        function fillDemoCredentials() {
+            const role = currentRole;
+            const users = userCredentials[role];
+            if (users && users.length > 0) {
+                const demoUser = users[0];
+                document.getElementById('loginEmail').value = demoUser.email;
+                document.getElementById('loginPassword').value = demoUser.password;
+                if (role === 'admin') {
+                    document.getElementById('securityKey').value = demoUser.securityKey;
+                }
+                hideAlert();
+            }
+        }
+
+        // Add demo button for testing (optional - remove in production)
+        document.addEventListener('DOMContentLoaded', function() {
+            const demoButton = document.createElement('button');
+            demoButton.type = 'button';
+            demoButton.className = 'btn p-btn w-100 mt-2';
+            demoButton.textContent = 'Fill Demo Credentials';
+            demoButton.onclick = fillDemoCredentials;
+            document.querySelector('.d-grid.gap-2.mt-4').after(demoButton);
+        });
+    </script>
+</body>
+</html>
