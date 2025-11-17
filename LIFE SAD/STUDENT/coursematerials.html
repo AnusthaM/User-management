@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Materials - Student Portal</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root{
+            --p-color:rgb(54, 15, 90);
+        }
+        body{
+            overflow-x: hidden;
+            background-color: #f8f9fa;
+        }
+        .p-btn{
+            color:var(--p-color);
+            border: 1px solid var(--p-color) ;
+        }
+        .p-btn:hover{
+            background-color: var(--p-color);
+            border: 1px solid white;
+            color: white;
+        }
+        .sidebar {
+            width: 180px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+            padding: 1rem;
+        }
+
+        .sidebar h5 {
+            color: var(--p-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar .nav-link {
+            color: #555;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color:var(--p-color);
+            color: white;
+        }
+        .main-content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+        
+        /* Course Materials specific styles */
+        .subject-card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            border-left: 4px solid var(--p-color);
+        }
+        .subject-card:hover {
+            transform: translateY(-2px);
+        }
+        .material-card {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .material-card:hover {
+            border-color: var(--p-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .file-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        .pdf-icon { background-color: #dc3545; }
+        .doc-icon { background-color: #0d6efd; }
+        .ppt-icon { background-color: #fd7e14; }
+        .video-icon { background-color: #6f42c1; }
+        .zip-icon { background-color: #20c997; }
+        
+        .subject-tab {
+            border-radius: 8px;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #dee2e6;
+        }
+        .subject-tab.active {
+            background-color: var(--p-color);
+            color: white;
+            border-color: var(--p-color);
+        }
+        .subject-tab:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+        .subject-content {
+            display: none;
+        }
+        .subject-content.active {
+            display: block;
+        }
+        .badge-new {
+            background-color: #dc3545;
+            color: white;
+            font-size: 0.7rem;
+        }
+        
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .navbar {
+                padding-left: 1rem !important;
+            }
+            .subject-tab {
+                padding: 8px 12px;
+                margin: 2px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--p-color); padding-left: 180px;">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-mortarboard-fill me-2"></i>
+                Student Portal
+            </a>
+
+            <!-- User profile section -->
+            <div class="navbar-nav">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                            <i class="bi bi-person-fill" style="color: var(--p-color);"></i>
+                        </div>
+                        Sarah Johnson
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.html">
+                            <i class="bi bi-person me-2"></i>
+                            Profile
+                        </a></li>
+                        <li><a class="dropdown-item" href="settings.html">
+                            <i class="bi bi-gear me-2"></i>
+                            Settings
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="landingpage.html">
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            Logout
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h5>Student Portal</h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="profile.html">
+                    <i class="bi bi-person me-2"></i>
+                    My Profile
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="schedule.html">
+                    <i class="bi bi-calendar-week me-2"></i>
+                    Schedule
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="grades.html">
+                    <i class="bi bi-journal-text me-2"></i>
+                    Grades
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="attendance.html">
+                    <i class="bi bi-clipboard-check me-2"></i>
+                    Attendance
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="materials.html">
+                    <i class="bi bi-folder me-2"></i>
+                    Course Materials
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="announcements.html">
+                    <i class="bi bi-megaphone me-2"></i>
+                    Announcements
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-1">Course Materials</h2>
+                        <p class="text-muted mb-0">Access study materials, notes, and resources for all subjects</p>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn p-btn">
+                            <i class="bi bi-search me-1"></i> Search
+                        </button>
+                        <button class="btn text-white" style="background-color: var(--p-color);">
+                            <i class="bi bi-download me-1"></i> Download All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject Navigation -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <div class="subject-tab active" onclick="showSubject('mathematics')">
+                                <i class="bi bi-calculator me-2"></i>Mathematics
+                            </div>
+                            <div class="subject-tab" onclick="showSubject('science')">
+                                <i class="bi bi-egg me-2"></i>Science
+                            </div>
+                            <div class="subject-tab" onclick="showSubject('english')">
+                                <i class="bi bi-book me-2"></i>English
+                            </div>
+                            <div class="subject-tab" onclick="showSubject('history')">
+                                <i class="bi bi-globe me-2"></i>History
+                            </div>
+                            <div class="subject-tab" onclick="showSubject('spanish')">
+                                <i class="bi bi-translate me-2"></i>Spanish
+                            </div>
+                            <div class="subject-tab" onclick="showSubject('art')">
+                                <i class="bi bi-palette me-2"></i>Art & Design
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mathematics Materials -->
+        <div class="subject-content active" id="mathematics-content">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-calculator me-2" style="color: var(--p-color);"></i>
+                                    Mathematics Materials
+                                </h5>
+                                <span class="text-muted">Teacher: Mr. Johnson</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Lecture Notes -->
+                            <h6 class="text-muted mb-3">Lecture Notes</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="material-card p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="file-icon pdf-icon me-3">
+                                                <i class="bi bi-file-earmark-pdf"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Algebra Basics</h6>
+                                                <p class="mb-1 text-muted small">Chapter 1-3 Notes</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted">PDF • 2.4 MB</small>
+                                                    <span class="badge badge-new">New</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-sm p-btn me-2">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <button class="btn btn-sm text-white" style="background-color: var(--p-color);">
+                                                <i class="bi bi-download me-1"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="material-card p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="file-icon doc-icon me-3">
+                                                <i class="bi bi-file-earmark-word"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Geometry Formulas</h6>
+                                                <p class="mb-1 text-muted small">Reference Sheet</p>
+                                                <small class="text-muted">DOC • 1.2 MB</small>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-sm p-btn me-2">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <button class="btn btn-sm text-white" style="background-color: var(--p-color);">
+                                                <i class="bi bi-download me-1"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="material-card p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="file-icon ppt-icon me-3">
+                                                <i class="bi bi-file-earmark-ppt"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Calculus Intro</h6>
+                                                <p class="mb-1 text-muted small">Slides Presentation</p>
+                                                <small class="text-muted">PPT • 3.1 MB</small>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-sm p-btn me-2">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <button class="btn btn-sm text-white" style="background-color: var(--p-color);">
+                                                <i class="bi bi-download me-1"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Video Resources -->
+                            <h6 class="text-muted mb-3">Video Resources</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="material-card p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="file-icon video-icon me-3">
+                                                <i class="bi bi-play-btn"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Quadratic Equations</h6>
+                                                <p class="mb-1 text-muted small">Step-by-step tutorial</p>
+                                                <small class="text-muted">MP4 • 15:32 • 45 MB</small>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-sm p-btn me-2">
+                                                <i class="bi bi-play-circle me-1"></i> Watch
+                                            </button>
+                                            <button class="btn btn-sm text-white" style="background-color: var(--p-color);">
+                                                <i class="bi bi-download me-1"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="material-card p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="file-icon video-icon me-3">
+                                                <i class="bi bi-play-btn"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Trigonometry Basics</h6>
+                                                <p class="mb-1 text-muted small">Visual explanations</p>
+                                                <small class="text-muted">MP4 • 22:15 • 68 MB</small>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-sm p-btn me-2">
+                                                <i class="bi bi-play-circle me-1"></i> Watch
+                                            </button>
+                                            <button class="btn btn-sm text-white" style="background-color: var(--p-color);">
+                                                <i class="bi bi-download me-1"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Practice Materials -->
+                            <h6 class="text-muted mb-3">Practice & Worksheets</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="material-card p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="file-icon pdf-icon me-3">
+                                                <i class="bi bi-file-earmark-pdf"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Algebra Practice</h6>
+                                                <p class="mb-1 text-muted small">Worksheet #1</p>
+                                                <small class="text-muted">PDF • 1.8 MB</small>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-sm p-btn me-2">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <button class="btn btn-sm text-white" style="background-color: var(--p-color);">
+                                                <i class="bi bi-download me-1"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="material-card p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="file-icon zip-icon me-3">
+                                                <i class="bi bi-file-earmark-zip"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">Math Problems Set</h6>
+                                                <p class="mb-1 text-muted small">Multiple worksheets</p>
+                                                <small class="text-muted">ZIP • 4.2 MB</small>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-sm p-btn me-2">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <button class="btn btn-sm text-white" style="background-color: var(--p-color);">
+                                                <i class="bi bi-download me-1"></i> Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Science Materials -->
+        <div class="subject-content" id="science-content">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-egg me-2" style="color: var(--p-color);"></i>
+                                    Science Materials
+                                </h5>
+                                <span class="text-muted">Teacher: Dr. Miller</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center py-5">
+                                <i class="bi bi-egg" style="font-size: 3rem; color: var(--p-color);"></i>
+                                <h5 class="mt-3">Science Course Materials</h5>
+                                <p class="text-muted">Biology, Chemistry, and Physics resources</p>
+                                <p class="text-muted small">Similar structure with science-specific materials</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- English Materials -->
+        <div class="subject-content" id="english-content">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-book me-2" style="color: var(--p-color);"></i>
+                                    English Materials
+                                </h5>
+                                <span class="text-muted">Teacher: Ms. Parker</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center py-5">
+                                <i class="bi bi-book" style="font-size: 3rem; color: var(--p-color);"></i>
+                                <h5 class="mt-3">English Literature Materials</h5>
+                                <p class="text-muted">Reading materials, writing guides, and resources</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Updates -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clock-history me-2" style="color: var(--p-color);"></i>
+                            Recently Updated Materials
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Material</th>
+                                        <th>Subject</th>
+                                        <th>Type</th>
+                                        <th>Size</th>
+                                        <th>Updated</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-file-earmark-pdf text-danger me-2"></i>
+                                                Algebra Basics
+                                            </div>
+                                        </td>
+                                        <td>Mathematics</td>
+                                        <td><span class="badge bg-danger">PDF</span></td>
+                                        <td>2.4 MB</td>
+                                        <td>Today</td>
+                                        <td>
+                                            <button class="btn btn-sm p-btn">
+                                                <i class="bi bi-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-play-btn text-primary me-2"></i>
+                                                Quadratic Equations
+                                            </div>
+                                        </td>
+                                        <td>Mathematics</td>
+                                        <td><span class="badge bg-primary">Video</span></td>
+                                        <td>45 MB</td>
+                                        <td>Yesterday</td>
+                                        <td>
+                                            <button class="btn btn-sm p-btn">
+                                                <i class="bi bi-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-file-earmark-word text-info me-2"></i>
+                                                Geometry Formulas
+                                            </div>
+                                        </td>
+                                        <td>Mathematics</td>
+                                        <td><span class="badge bg-info">DOC</span></td>
+                                        <td>1.2 MB</td>
+                                        <td>Oct 28</td>
+                                        <td>
+                                            <button class="btn btn-sm p-btn">
+                                                <i class="bi bi-download"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function showSubject(subject) {
+            // Hide all subject contents
+            document.querySelectorAll('.subject-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.subject-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected subject content
+            document.getElementById(subject + '-content').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

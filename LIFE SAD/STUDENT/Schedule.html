@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Schedule - Student Portal</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root{
+            --p-color:rgb(54, 15, 90);
+        }
+        body{
+            overflow-x: hidden;
+            background-color: #f8f9fa;
+        }
+        .p-btn{
+            color:var(--p-color);
+            border: 1px solid var(--p-color) ;
+        }
+        .p-btn:hover{
+            background-color: var(--p-color);
+            border: 1px solid white;
+            color: white;
+        }
+        .sidebar {
+            width: 180px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+            padding: 1rem;
+        }
+
+        .sidebar h5 {
+            color: var(--p-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar .nav-link {
+            color: #555;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color:var(--p-color);
+            color: white;
+        }
+        .main-content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+        
+        /* Schedule specific styles */
+        .schedule-card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .schedule-card:hover {
+            transform: translateY(-2px);
+        }
+        .time-slot {
+            border-left: 4px solid var(--p-color);
+            background: white;
+        }
+        .current-class {
+            border-left: 4px solid #28a745;
+            background: linear-gradient(135deg, #f8fff9, #ffffff);
+        }
+        .break-time {
+            border-left: 4px solid #ffc107;
+            background: #fffbf0;
+        }
+        .day-tab {
+            border-radius: 8px;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #dee2e6;
+        }
+        .day-tab.active {
+            background-color: var(--p-color);
+            color: white;
+            border-color: var(--p-color);
+        }
+        .day-tab:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+        .subject-badge {
+            background-color: var(--p-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        .day-schedule {
+            display: none;
+        }
+        .day-schedule.active {
+            display: block;
+        }
+        
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .navbar {
+                padding-left: 1rem !important;
+            }
+            .day-tab {
+                padding: 8px 12px;
+                margin: 2px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--p-color); padding-left: 180px;">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-mortarboard-fill me-2"></i>
+                Student Portal
+            </a>
+
+            <!-- User profile section -->
+            <div class="navbar-nav">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                            <i class="bi bi-person-fill" style="color: var(--p-color);"></i>
+                        </div>
+                        Sarah Johnson
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.html">
+                            <i class="bi bi-person me-2"></i>
+                            Profile
+                        </a></li>
+                        <li><a class="dropdown-item" href="settings.html">
+                            <i class="bi bi-gear me-2"></i>
+                            Settings
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="landingpage.html">
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            Logout
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h5>Student Portal</h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="profile.html">
+                    <i class="bi bi-person me-2"></i>
+                    My Profile
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="schedule.html">
+                    <i class="bi bi-calendar-week me-2"></i>
+                    Schedule
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="grades.html">
+                    <i class="bi bi-journal-text me-2"></i>
+                    Grades
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="attendance.html">
+                    <i class="bi bi-clipboard-check me-2"></i>
+                    Attendance
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="announcements.html">
+                    <i class="bi bi-megaphone me-2"></i>
+                    Announcements
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-1">My Schedule</h2>
+                        <p class="text-muted mb-0">Grade 10 - Section A | Weekly Timetable</p>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn p-btn">
+                            <i class="bi bi-printer me-1"></i> Print
+                        </button>
+                        <button class="btn text-white" style="background-color: var(--p-color);">
+                            <i class="bi bi-download me-1"></i> Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week Navigation -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Week of October 30, 2023</h5>
+                            <div>
+                                <button class="btn btn-outline-secondary btn-sm me-2">
+                                    <i class="bi bi-chevron-left"></i> Previous
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm">
+                                    Next <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Day Tabs -->
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <div class="day-tab active" onclick="showDay('monday')">Monday</div>
+                            <div class="day-tab" onclick="showDay('tuesday')">Tuesday</div>
+                            <div class="day-tab" onclick="showDay('wednesday')">Wednesday</div>
+                            <div class="day-tab" onclick="showDay('thursday')">Thursday</div>
+                            <div class="day-tab" onclick="showDay('friday')">Friday</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monday Schedule -->
+        <div class="day-schedule active" id="monday-schedule">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-calendar-day me-2" style="color: var(--p-color);"></i>
+                                Monday - October 30, 2023
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Morning Session -->
+                            <h6 class="text-muted mb-3">Morning Session</h6>
+                            
+                            <div class="time-slot p-3 mb-3 rounded current-class">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2">MATH</span>
+                                            <h6 class="mb-0">Mathematics</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>08:00 - 09:00 AM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Room 204
+                                        </p>
+                                        <small class="text-muted">Teacher: Mr. Johnson</small>
+                                    </div>
+                                    <span class="badge bg-success">Current</span>
+                                </div>
+                            </div>
+
+                            <div class="time-slot p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #dc3545;">SCI</span>
+                                            <h6 class="mb-0">Science</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>09:15 - 10:15 AM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Lab 305
+                                        </p>
+                                        <small class="text-muted">Teacher: Dr. Miller</small>
+                                    </div>
+                                    <span class="badge bg-light text-dark">Up Next</span>
+                                </div>
+                            </div>
+
+                            <!-- Break -->
+                            <div class="break-time p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Break</h6>
+                                        <p class="mb-0 text-muted">
+                                            <i class="bi bi-clock me-1"></i>10:15 - 10:30 AM
+                                        </p>
+                                    </div>
+                                    <i class="bi bi-cup-straw text-warning" style="font-size: 1.5rem;"></i>
+                                </div>
+                            </div>
+
+                            <!-- Mid-morning Session -->
+                            <h6 class="text-muted mb-3 mt-4">Mid-morning Session</h6>
+                            
+                            <div class="time-slot p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #fd7e14;">ENG</span>
+                                            <h6 class="mb-0">English Literature</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>10:30 - 11:30 AM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Room 112
+                                        </p>
+                                        <small class="text-muted">Teacher: Ms. Parker</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="time-slot p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #20c997;">HIS</span>
+                                            <h6 class="mb-0">History</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>11:45 AM - 12:45 PM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Room 218
+                                        </p>
+                                        <small class="text-muted">Teacher: Mr. Davis</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lunch Break -->
+                            <div class="break-time p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Lunch Break</h6>
+                                        <p class="mb-0 text-muted">
+                                            <i class="bi bi-clock me-1"></i>12:45 - 01:30 PM
+                                        </p>
+                                    </div>
+                                    <i class="bi bi-egg-fried text-warning" style="font-size: 1.5rem;"></i>
+                                </div>
+                            </div>
+
+                            <!-- Afternoon Session -->
+                            <h6 class="text-muted mb-3 mt-4">Afternoon Session</h6>
+                            
+                            <div class="time-slot p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #6f42c1;">SPA</span>
+                                            <h6 class="mb-0">Spanish</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>01:30 - 02:30 PM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Room 127
+                                        </p>
+                                        <small class="text-muted">Teacher: Señora Garcia</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="time-slot p-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #e83e8c;">ART</span>
+                                            <h6 class="mb-0">Art & Design</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>02:45 - 03:45 PM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Art Room
+                                        </p>
+                                        <small class="text-muted">Teacher: Mrs. Wilson</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tuesday Schedule -->
+        <div class="day-schedule" id="tuesday-schedule">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-calendar-day me-2" style="color: var(--p-color);"></i>
+                                Tuesday - October 31, 2023
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Morning Session -->
+                            <h6 class="text-muted mb-3">Morning Session</h6>
+                            
+                            <div class="time-slot p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #fd7e14;">ENG</span>
+                                            <h6 class="mb-0">English</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>08:00 - 09:00 AM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Room 112
+                                        </p>
+                                        <small class="text-muted">Teacher: Ms. Parker</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="time-slot p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2">MATH</span>
+                                            <h6 class="mb-0">Mathematics</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>09:15 - 10:15 AM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Room 204
+                                        </p>
+                                        <small class="text-muted">Teacher: Mr. Johnson</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Break -->
+                            <div class="break-time p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Break</h6>
+                                        <p class="mb-0 text-muted">
+                                            <i class="bi bi-clock me-1"></i>10:15 - 10:30 AM
+                                        </p>
+                                    </div>
+                                    <i class="bi bi-cup-straw text-warning" style="font-size: 1.5rem;"></i>
+                                </div>
+                            </div>
+
+                            <!-- Mid-morning Session -->
+                            <h6 class="text-muted mb-3 mt-4">Mid-morning Session</h6>
+                            
+                            <div class="time-slot p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #dc3545;">SCI</span>
+                                            <h6 class="mb-0">Science</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>10:30 - 11:30 AM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Lab 305
+                                        </p>
+                                        <small class="text-muted">Teacher: Dr. Miller</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="time-slot p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #6f42c1;">SPA</span>
+                                            <h6 class="mb-0">Spanish</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>11:45 AM - 12:45 PM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Room 127
+                                        </p>
+                                        <small class="text-muted">Teacher: Señora Garcia</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lunch Break -->
+                            <div class="break-time p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Lunch Break</h6>
+                                        <p class="mb-0 text-muted">
+                                            <i class="bi bi-clock me-1"></i>12:45 - 01:30 PM
+                                        </p>
+                                    </div>
+                                    <i class="bi bi-egg-fried text-warning" style="font-size: 1.5rem;"></i>
+                                </div>
+                            </div>
+
+                            <!-- Afternoon Session -->
+                            <h6 class="text-muted mb-3 mt-4">Afternoon Session</h6>
+                            
+                            <div class="time-slot p-3 mb-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #20c997;">HIS</span>
+                                            <h6 class="mb-0">History</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>01:30 - 02:30 PM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Room 218
+                                        </p>
+                                        <small class="text-muted">Teacher: Mr. Davis</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="time-slot p-3 rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="subject-badge me-2" style="background-color: #17a2b8;">PE</span>
+                                            <h6 class="mb-0">Physical Education</h6>
+                                        </div>
+                                        <p class="mb-1 text-muted">
+                                            <i class="bi bi-clock me-1"></i>02:45 - 03:45 PM
+                                            <i class="bi bi-geo-alt ms-3 me-1"></i>Gym
+                                        </p>
+                                        <small class="text-muted">Teacher: Coach Smith</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wednesday Schedule -->
+        <div class="day-schedule" id="wednesday-schedule">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-calendar-day me-2" style="color: var(--p-color);"></i>
+                                Wednesday - November 1, 2023
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Add Wednesday schedule content similar to Monday/Tuesday -->
+                            <div class="text-center py-5">
+                                <i class="bi bi-calendar3" style="font-size: 3rem; color: var(--p-color);"></i>
+                                <h5 class="mt-3">Wednesday Schedule</h5>
+                                <p class="text-muted">Similar structure with different classes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thursday Schedule -->
+        <div class="day-schedule" id="thursday-schedule">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-calendar-day me-2" style="color: var(--p-color);"></i>
+                                Thursday - November 2, 2023
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Add Thursday schedule content -->
+                            <div class="text-center py-5">
+                                <i class="bi bi-calendar3" style="font-size: 3rem; color: var(--p-color);"></i>
+                                <h5 class="mt-3">Thursday Schedule</h5>
+                                <p class="text-muted">Similar structure with different classes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Friday Schedule -->
+        <div class="day-schedule" id="friday-schedule">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-calendar-day me-2" style="color: var(--p-color);"></i>
+                                Friday - November 3, 2023
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Add Friday schedule content -->
+                            <div class="text-center py-5">
+                                <i class="bi bi-calendar3" style="font-size: 3rem; color: var(--p-color);"></i>
+                                <h5 class="mt-3">Friday Schedule</h5>
+                                <p class="text-muted">Similar structure with different classes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Overview -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-calendar-week me-2" style="color: var(--p-color);"></i>
+                            Weekly Overview
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednesday</th>
+                                        <th>Thursday</th>
+                                        <th>Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>08:00 - 09:00</td>
+                                        <td>Mathematics<br><small>Room 204</small></td>
+                                        <td>English<br><small>Room 112</small></td>
+                                        <td>Science<br><small>Lab 305</small></td>
+                                        <td>Mathematics<br><small>Room 204</small></td>
+                                        <td>History<br><small>Room 218</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>09:15 - 10:15</td>
+                                        <td>Science<br><small>Lab 305</small></td>
+                                        <td>Mathematics<br><small>Room 204</small></td>
+                                        <td>English<br><small>Room 112</small></td>
+                                        <td>Science<br><small>Lab 305</small></td>
+                                        <td>Mathematics<br><small>Room 204</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10:30 - 11:30</td>
+                                        <td>English<br><small>Room 112</small></td>
+                                        <td>Science<br><small>Lab 305</small></td>
+                                        <td>Mathematics<br><small>Room 204</small></td>
+                                        <td>English<br><small>Room 112</small></td>
+                                        <td>Science<br><small>Lab 305</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>11:45 - 12:45</td>
+                                        <td>History<br><small>Room 218</small></td>
+                                        <td>Spanish<br><small>Room 127</small></td>
+                                        <td>Art<br><small>Art Room</small></td>
+                                        <td>History<br><small>Room 218</small></td>
+                                        <td>Spanish<br><small>Room 127</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>01:30 - 02:30</td>
+                                        <td>Spanish<br><small>Room 127</small></td>
+                                        <td>History<br><small>Room 218</small></td>
+                                        <td>Physical Ed.<br><small>Gym</small></td>
+                                        <td>Spanish<br><small>Room 127</small></td>
+                                        <td>Art<br><small>Art Room</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>02:45 - 03:45</td>
+                                        <td>Art<br><small>Art Room</small></td>
+                                        <td>Physical Ed.<br><small>Gym</small></td>
+                                        <td>Spanish<br><small>Room 127</small></td>
+                                        <td>Art<br><small>Art Room</small></td>
+                                        <td>Physical Ed.<br><small>Gym</small></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function showDay(day) {
+            // Hide all day schedules
+            document.querySelectorAll('.day-schedule').forEach(schedule => {
+                schedule.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.day-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected day schedule
+            document.getElementById(day + '-schedule').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
