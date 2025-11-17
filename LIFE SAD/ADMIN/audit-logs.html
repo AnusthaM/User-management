@@ -1,424 +1,490 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School User Management</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <style>
-        :root{
-            --p-color:rgb(54, 15, 90);
-        }
-        body{
-            overflow-x: hidden;
-        }
-        .p-btn{
-            color:var(--p-color);
-            border: 1px solid var(--p-color) ;
-        }
-        .p-btn:hover{
-            background-color: var(--p-color);
-            border: 1px solid white;
-            color: white;
-        }
-        .sidebar {
-            width: 180px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: #ffffff;
-            border-right: 1px solid #e5e5e5;
-            padding: 1rem;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>School User Management - Audit Logs</title>
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+        <style>
+            :root{
+                --p-color:rgb(54, 15, 90);
+            }
+            body{
+                overflow-x: hidden;
+                background-color: #f8f9fa;
+            }
+            .p-btn{
+                color:var(--p-color);
+                border: 1px solid var(--p-color) ;
+            }
+            .p-btn:hover{
+                background-color: var(--p-color);
+                border: 1px solid white;
+                color: white;
+            }
+            .sidebar {
+                width: 180px;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                background: #ffffff;
+                border-right: 1px solid #e5e5e5;
+                padding: 1rem;
+            }
 
-        .sidebar h5 {
-            color: var(--p-color);
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-        }
+            .sidebar h5 {
+                color: var(--p-color);
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+            }
 
-        .sidebar .nav-link {
-            color: #555;
-            border-radius: 8px;
-            margin-bottom: 5px;
-        }
+            .sidebar .nav-link {
+                color: #555;
+                border-radius: 8px;
+                margin-bottom: 5px;
+            }
 
-        .sidebar .nav-link.active,
-        .sidebar .nav-link:hover {
-            background-color:var(--p-color);
-            color: white;
-        }
-        
-        /* Chart Styles */
-        .chart-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .chart-title {
-            color: var(--p-color);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .bar-chart {
-            display: flex;
-            align-items: flex-end;
-            height: 200px;
-            padding: 0 1rem;
-            gap: 15px;
-        }
-        
-        .bar {
-            flex: 1;
-            background: linear-gradient(to top, var(--p-color), #7c3aed);
-            border-radius: 4px 4px 0 0;
-            position: relative;
-            min-height: 10px;
-        }
-        
-        .bar-label {
-            position: absolute;
-            bottom: -25px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #666;
-        }
-        
-        .bar-value {
-            position: absolute;
-            top: -25px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-weight: bold;
-            color: var(--p-color);
-        }
-        
-        .pie-chart {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: conic-gradient(
-                #4f46e5 0% 35%,
-                #10b981 35% 65%,
-                #f59e0b 65% 85%,
-                #ef4444 85% 100%
-            );
-            margin: 0 auto;
-            position: relative;
-        }
-        
-        .pie-center {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background: white;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: var(--p-color);
-        }
-        
-        .chart-legend {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 1rem;
-            gap: 10px;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            font-size: 0.85rem;
-            margin-right: 10px;
-        }
-        
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-            margin-right: 5px;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--p-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .stat-change {
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
-        }
-        
-        .stat-change.positive {
-            color: #10b981;
-        }
-        
-        .stat-change.negative {
-            color: #ef4444;
-        }
-    </style>
-</head>
+            .sidebar .nav-link.active,
+            .sidebar .nav-link:hover {
+                background-color:var(--p-color);
+                color: white;
+            }
+            
+            .main-content {
+                margin-left: 180px;
+                padding: 20px;
+            }
+            
+            .card {
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+                border: none;
+            }
+            
+            .card-header {
+                background-color: white;
+                border-bottom: 1px solid #e3e6f0;
+                font-weight: 600;
+                padding: 15px 20px;
+                border-radius: 10px 10px 0 0 !important;
+            }
+            
+            .table th {
+                background-color: #f8f9fa;
+                color: var(--p-color);
+            }
+            
+            .status-badge {
+                padding: 5px 10px;
+                border-radius: 20px;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+            
+            .status-success {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            
+            .status-warning {
+                background-color: #fff3cd;
+                color: #856404;
+            }
+            
+            .status-danger {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+            
+            .status-info {
+                background-color: #d1ecf1;
+                color: #0c5460;
+            }
+            
+            .log-action {
+                font-weight: 500;
+            }
+            
+            .log-user {
+                color: var(--p-color);
+                font-weight: 500;
+            }
+            
+            .filter-section {
+                background-color: white;
+                border-radius: 10px;
+                padding: 15px;
+                margin-bottom: 20px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+            
+            @media (max-width: 576px) {
+                .sidebar {
+                    width: 100%;
+                    height: auto;
+                    position: relative;
+                    padding: 1rem;
+                }
+                
+                .body {
+                    text-align: center;
+                }
 
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--p-color); padding-left: 180px;">
-        <div class="container">
-            <!-- Brand/Logo -->
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="bi bi-mortarboard-fill me-2"></i>
-                School User Management
-            </a>
+                .main-content {
+                    margin-left: 0;
+                }
+                
+                .navbar {
+                    padding-left: 1rem !important;
+                }
+            }
+        </style>
+    </head>
 
-            <!-- User profile section -->
-            <div class="navbar-nav">
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
-                            <i class="bi bi-person-fill" style="color: var(--p-color);"></i>
-                        </div>
-                        Admin User
+    <body>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--p-color); padding-left: 180px;">
+            <div class="container-fluid">
+                <!-- Brand/Logo -->
+                <a class="navbar-brand fw-bold" href="#">
+                    <i class="bi bi-mortarboard-fill me-2"></i>
+                    School User Management
+                </a>
+
+                <!-- User profile section -->
+                <div class="navbar-nav">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                <i class="bi bi-person-fill" style="color: var(--p-color);"></i>
+                            </div>
+                            Admin User
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">
+                                <i class="bi bi-person me-2"></i>
+                                Profile
+                            </a></li>
+                            <li><a class="dropdown-item" href="#">
+                                <i class="bi bi-gear me-2"></i>
+                                Settings
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#">
+                                <i class="bi bi-box-arrow-right me-2"></i>
+                                Logout
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h5>Navigation</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Dashboard
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="profile.html">
-                            <i class="bi bi-person me-2"></i>
-                            Profile
-                        </a></li>
-                        <li><a class="dropdown-item" href="settings.html">
-                            <i class="bi bi-gear me-2"></i>
-                            Settings
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="landingpage.html">
-                            <i class="bi bi-box-arrow-right me-2"></i>
-                            Logout
-                        </a></li>
-                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="student.html">
+                        <i class="bi bi-people me-2"></i>
+                        Students
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="teacher.html">
+                        <i class="bi bi-person-badge me-2"></i>
+                        Teachers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="staff.html">
+                        <i class="bi bi-journal-text me-2"></i>
+                        Staff
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="classes.html">
+                        <i class="bi bi-journal-text me-2"></i>
+                        Classes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">
+                        <i class="bi bi-journal-text me-2"></i>
+                        Audit Logs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="reports.html">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Reports
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Page content -->
+        <div class="main-content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                <h1 class="h2">Audit Logs</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <button class="btn p-btn me-2">
+                        <i class="bi bi-download"></i> Export Logs
+                    </button>
+                    <button class="btn text-white" style="background-color: var(--p-color);">
+                        <i class="bi bi-funnel"></i> Apply Filters
+                    </button>
                 </div>
             </div>
-        </div>
-    </nav>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h5>Navigation</h5>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="dashboard.html">
-                    <i class="bi bi-speedometer2 me-2"></i>
-                    Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="student.html">
-                    <i class="bi bi-people me-2"></i>
-                    Students
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="teacher.html">
-                    <i class="bi bi-person-badge me-2"></i>
-                    Teachers
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="classes.html">
-                    <i class="bi bi-journal-text me-2"></i>
-                    Classes
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="#">
-                    <i class="bi bi-graph-up me-2"></i>
-                    Reports
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Page content -->
-    <div class="container mt-4 w-auto" style="margin-left: 200px;">
-        <div class="row">
-            <div class="col">
-                <h2 class="mb-4" style="color: var(--p-color);">Dashboard Overview</h2>
-                
-                <!-- Statistics Cards -->
-                <div class="row mb-4">
+            
+            <!-- Filters Section -->
+            <div class="filter-section">
+                <div class="row g-3">
                     <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-value">1,254</div>
-                            <div class="stat-label">Total Students</div>
-                            <div class="stat-change positive">
-                                <i class="bi bi-arrow-up"></i> 5.2% from last month
-                            </div>
-                        </div>
+                        <label for="dateFrom" class="form-label">Date From</label>
+                        <input type="date" class="form-control" id="dateFrom" value="2023-10-01">
                     </div>
                     <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-value">84</div>
-                            <div class="stat-label">Total Teachers</div>
-                            <div class="stat-change positive">
-                                <i class="bi bi-arrow-up"></i> 2.4% from last month
-                            </div>
-                        </div>
+                        <label for="dateTo" class="form-label">Date To</label>
+                        <input type="date" class="form-control" id="dateTo" value="2023-10-31">
                     </div>
                     <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-value">42</div>
-                            <div class="stat-label">Classes</div>
-                            <div class="stat-change positive">
-                                <i class="bi bi-arrow-up"></i> 1 new class
-                            </div>
-                        </div>
+                        <label for="userFilter" class="form-label">User</label>
+                        <select class="form-select" id="userFilter">
+                            <option value="">All Users</option>
+                            <option value="admin">Admin User</option>
+                            <option value="teacher1">John Smith</option>
+                            <option value="teacher2">Sarah Johnson</option>
+                            <option value="teacher3">Michael Brown</option>
+                        </select>
                     </div>
                     <div class="col-md-3">
-                        <div class="stat-card">
-                            <div class="stat-value">96.5%</div>
-                            <div class="stat-label">Attendance Rate</div>
-                            <div class="stat-change negative">
-                                <i class="bi bi-arrow-down"></i> 0.8% from last week
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Charts Row -->
-                <div class="row">
-                    <!-- Student Distribution Chart -->
-                    <div class="col-md-6">
-                        <div class="chart-container">
-                            <h5 class="chart-title">Student Distribution by Grade</h5>
-                            <div class="bar-chart">
-                                <div class="bar" style="height: 85%;">
-                                    <div class="bar-value">425</div>
-                                    <div class="bar-label">Grade 9</div>
-                                </div>
-                                <div class="bar" style="height: 75%;">
-                                    <div class="bar-value">375</div>
-                                    <div class="bar-label">Grade 10</div>
-                                </div>
-                                <div class="bar" style="height: 65%;">
-                                    <div class="bar-value">325</div>
-                                    <div class="bar-label">Grade 11</div>
-                                </div>
-                                <div class="bar" style="height: 55%;">
-                                    <div class="bar-value">275</div>
-                                    <div class="bar-label">Grade 12</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Teacher Subjects Chart -->
-                    <div class="col-md-6">
-                        <div class="chart-container">
-                            <h5 class="chart-title">Teachers by Subject</h5>
-                            <div class="pie-chart">
-                                <div class="pie-center">84</div>
-                            </div>
-                            <div class="chart-legend">
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #4f46e5;"></div>
-                                    <span>Math & Science (35%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #10b981;"></div>
-                                    <span>Languages (30%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #f59e0b;"></div>
-                                    <span>Arts & Humanities (20%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background-color: #ef4444;"></div>
-                                    <span>Other (15%)</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Additional Charts Row -->
-                <div class="row mt-4">
-                    <!-- Student Gender Distribution -->
-                    <div class="col-md-6">
-                        <div class="chart-container">
-                            <h5 class="chart-title">Student Gender Distribution</h5>
-                            <div class="bar-chart">
-                                <div class="bar" style="height: 90%; background: linear-gradient(to top, #4f46e5, #7c3aed);">
-                                    <div class="bar-value">52%</div>
-                                    <div class="bar-label">Female</div>
-                                </div>
-                                <div class="bar" style="height: 80%; background: linear-gradient(to top, #10b981, #34d399);">
-                                    <div class="bar-value">48%</div>
-                                    <div class="bar-label">Male</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Teacher Experience -->
-                    <div class="col-md-6">
-                        <div class="chart-container">
-                            <h5 class="chart-title">Teacher Experience Distribution</h5>
-                            <div class="bar-chart">
-                                <div class="bar" style="height: 40%;">
-                                    <div class="bar-value">15</div>
-                                    <div class="bar-label">0-5 yrs</div>
-                                </div>
-                                <div class="bar" style="height: 60%;">
-                                    <div class="bar-value">22</div>
-                                    <div class="bar-label">6-10 yrs</div>
-                                </div>
-                                <div class="bar" style="height: 80%;">
-                                    <div class="bar-value">29</div>
-                                    <div class="bar-label">11-15 yrs</div>
-                                </div>
-                                <div class="bar" style="height: 70%;">
-                                    <div class="bar-value">18</div>
-                                    <div class="bar-label">16+ yrs</div>
-                                </div>
-                            </div>
-                        </div>
+                        <label for="actionFilter" class="form-label">Action</label>
+                        <select class="form-select" id="actionFilter">
+                            <option value="">All Actions</option>
+                            <option value="login">Login</option>
+                            <option value="logout">Logout</option>
+                            <option value="create">Create</option>
+                            <option value="update">Update</option>
+                            <option value="delete">Delete</option>
+                            <option value="view">View</option>
+                        </select>
                     </div>
                 </div>
             </div>
+            
+            <!-- Audit Logs Table -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Recent Activity</span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="autoRefresh" checked>
+                        <label class="form-check-label" for="autoRefresh">Auto Refresh</label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Resource</th>
+                                    <th>Details</th>
+                                    <th>IP Address</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2023-10-31 14:32:15</td>
+                                    <td><span class="log-user">Admin User</span></td>
+                                    <td><span class="log-action">Login</span></td>
+                                    <td>System</td>
+                                    <td>Successful authentication</td>
+                                    <td>192.168.1.105</td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2023-10-31 14:28:42</td>
+                                    <td><span class="log-user">John Smith</span></td>
+                                    <td><span class="log-action">Update</span></td>
+                                    <td>Student Record</td>
+                                    <td>Updated grade for Student ID: S10025</td>
+                                    <td>192.168.1.112</td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2023-10-31 14:15:33</td>
+                                    <td><span class="log-user">Sarah Johnson</span></td>
+                                    <td><span class="log-action">Create</span></td>
+                                    <td>Assignment</td>
+                                    <td>Created new assignment: Math Homework #5</td>
+                                    <td>192.168.1.108</td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2023-10-31 13:58:21</td>
+                                    <td><span class="log-user">Michael Brown</span></td>
+                                    <td><span class="log-action">Delete</span></td>
+                                    <td>User Account</td>
+                                    <td>Deleted student account: S10018</td>
+                                    <td>192.168.1.115</td>
+                                    <td><span class="status-badge status-warning">Warning</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2023-10-31 13:42:09</td>
+                                    <td><span class="log-user">Unknown</span></td>
+                                    <td><span class="log-action">Login</span></td>
+                                    <td>System</td>
+                                    <td>Failed authentication attempt</td>
+                                    <td>192.168.1.200</td>
+                                    <td><span class="status-badge status-danger">Failed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2023-10-31 13:25:54</td>
+                                    <td><span class="log-user">Admin User</span></td>
+                                    <td><span class="log-action">Update</span></td>
+                                    <td>System Settings</td>
+                                    <td>Changed password policy requirements</td>
+                                    <td>192.168.1.105</td>
+                                    <td><span class="status-badge status-info">Info</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2023-10-31 12:58:17</td>
+                                    <td><span class="log-user">Sarah Johnson</span></td>
+                                    <td><span class="log-action">View</span></td>
+                                    <td>Student Records</td>
+                                    <td>Accessed student grade reports</td>
+                                    <td>192.168.1.108</td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2023-10-31 12:43:32</td>
+                                    <td><span class="log-user">John Smith</span></td>
+                                    <td><span class="log-action">Create</span></td>
+                                    <td>Attendance Record</td>
+                                    <td>Marked attendance for Class 10-A</td>
+                                    <td>192.168.1.112</td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2023-10-31 12:22:05</td>
+                                    <td><span class="log-user">Admin User</span></td>
+                                    <td><span class="log-action">Update</span></td>
+                                    <td>User Permissions</td>
+                                    <td>Modified permissions for Teacher ID: T1003</td>
+                                    <td>192.168.1.105</td>
+                                    <td><span class="status-badge status-info">Info</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2023-10-31 11:59:48</td>
+                                    <td><span class="log-user">Michael Brown</span></td>
+                                    <td><span class="log-action">Logout</span></td>
+                                    <td>System</td>
+                                    <td>User logged out successfully</td>
+                                    <td>192.168.1.115</td>
+                                    <td><span class="status-badge status-success">Success</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <nav aria-label="Audit logs pagination">
+                        <ul class="pagination justify-content-center mt-4">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Statistics Cards -->
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 class="card-title">1,248</h4>
+                                    <p class="card-text">Total Logs</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-clipboard-data" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 class="card-title">1,189</h4>
+                                    <p class="card-text">Successful Actions</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-check-circle" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 class="card-title">42</h4>
+                                    <p class="card-text">Warnings</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-exclamation-triangle" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-danger">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 class="card-title">17</h4>
+                                    <p class="card-text">Failed Actions</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-x-circle" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+        <!-- Bootstrap JS Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>
