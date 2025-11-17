@@ -14,6 +14,7 @@
         }
         body{
             overflow-x: hidden;
+            background-color: #f8f9fa;
         }
         .p-btn{
             color:var(--p-color);
@@ -53,6 +54,11 @@
             color: white;
         }
         
+        .main-content {
+            margin-left: 180px;
+            padding: 20px;
+        }
+        
         .staff-avatar {
             width: 40px;
             height: 40px;
@@ -86,11 +92,24 @@
             font-size: 0.9rem;
         }
         
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e3e6f0;
+            font-weight: 600;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
         .table th {
             background-color: #f8f9fa;
-            border-top: none;
-            font-weight: 600;
-            color: #495057;
+            color: var(--p-color);
         }
         
         .badge {
@@ -103,16 +122,54 @@
             font-size: 0.875rem;
         }
         
-        .card {
-            border: 1px solid #e5e5e5;
+        .filter-section {
+            background-color: white;
             border-radius: 10px;
+            padding: 15px;
             margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         
-        .card-header {
-            background-color: white;
-            border-bottom: 1px solid #e5e5e5;
-            font-weight: 600;
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            
+            .navbar {
+                padding-left: 1rem !important;
+            }
+            
+            .stat-card {
+                padding: 15px 10px;
+                margin-bottom: 10px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 10px;
+            }
+            
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+            
+            .btn-group .btn {
+                padding: 3px 6px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -120,7 +177,7 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--p-color); padding-left: 180px;">
-        <div class="container">
+        <div class="container-fluid">
             <!-- Brand/Logo -->
             <a class="navbar-brand fw-bold" href="#">
                 <i class="bi bi-mortarboard-fill me-2"></i>
@@ -167,13 +224,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="students.html">
+                <a class="nav-link" href="student.html">
                     <i class="bi bi-people me-2"></i>
                     Students
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="teachers.html">
+                <a class="nav-link" href="teacher.html">
                     <i class="bi bi-person-badge me-2"></i>
                     Teachers
                 </a>
@@ -200,45 +257,70 @@
     </div>
 
     <!-- Page content -->
-    <div class="container mt-4" style="margin-left: 200px;">
-        <!-- Header Section -->
-        <div class="row mb-4">
-            <div class="col">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h1 class="h3 mb-1">Staff Management</h1>
-                        <p class="text-muted mb-0">Manage administrative and support staff members</p>
-                    </div>
-                    <div>
-                        <button class="btn p-btn">
-                            <i class="bi bi-plus-circle me-1"></i> Add Staff
-                        </button>
-                    </div>
+    <div class="main-content">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+            <h1 class="h2">Staff Management</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <button class="btn p-btn me-2">
+                    <i class="bi bi-download"></i> Export Staff
+                </button>
+                <button class="btn text-white" style="background-color: var(--p-color);">
+                    <i class="bi bi-plus-circle"></i> Add Staff
+                </button>
+            </div>
+        </div>
+        
+        <!-- Filters Section -->
+        <div class="filter-section">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="departmentFilter" class="form-label">Department</label>
+                    <select class="form-select" id="departmentFilter">
+                        <option value="">All Departments</option>
+                        <option value="it">IT Department</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="finance">Finance</option>
+                        <option value="facilities">Facilities</option>
+                        <option value="library">Library</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="statusFilter" class="form-label">Status</label>
+                    <select class="form-select" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="leave">On Leave</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="searchStaff" class="form-label">Search</label>
+                    <input type="text" class="form-control" id="searchStaff" placeholder="Search staff members...">
                 </div>
             </div>
         </div>
 
         <!-- Stats Cards -->
         <div class="row mb-4">
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-number">86</div>
                     <div class="stat-label">Total Staff</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-number">78</div>
                     <div class="stat-label">Active Staff</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-number">8</div>
                     <div class="stat-label">Departments</div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6 mb-3">
                 <div class="stat-card">
                     <div class="stat-number">5</div>
                     <div class="stat-label">New This Month</div>
@@ -247,178 +329,209 @@
         </div>
 
         <!-- Staff List -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Staff Directory</h5>
-                        <div class="d-flex gap-2">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search staff..." style="width: 200px;">
-                            <button class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-filter me-1"></i> Filter
-                            </button>
-                        </div>
-                    </div>
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Staff Directory</span>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="showInactive" checked>
+                    <label class="form-check-label" for="showInactive">Show Inactive</label>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Staff ID</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Department</th>
+                                <th>Contact</th>
+                                <th>Join Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>STF-2021-0012</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="staff-avatar me-2">RJ</div>
+                                        Robert Johnson
+                                    </div>
+                                </td>
+                                <td>IT Administrator</td>
+                                <td>IT Department</td>
+                                <td>r.johnson@school.edu</td>
+                                <td>Jan 15, 2021</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn p-btn action-btn">View</button>
+                                        <button class="btn p-btn action-btn">Edit</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>STF-2022-0045</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="staff-avatar me-2">SG</div>
+                                        Sarah Garcia
+                                    </div>
+                                </td>
+                                <td>HR Manager</td>
+                                <td>Human Resources</td>
+                                <td>s.garcia@school.edu</td>
+                                <td>Mar 22, 2022</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn p-btn action-btn">View</button>
+                                        <button class="btn p-btn action-btn">Edit</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>STF-2020-0078</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="staff-avatar me-2">MW</div>
+                                        Michael Wilson
+                                    </div>
+                                </td>
+                                <td>Finance Officer</td>
+                                <td>Finance</td>
+                                <td>m.wilson@school.edu</td>
+                                <td>Aug 10, 2020</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn p-btn action-btn">View</button>
+                                        <button class="btn p-btn action-btn">Edit</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>STF-2023-0023</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="staff-avatar me-2">LD</div>
+                                        Lisa Davis
+                                    </div>
+                                </td>
+                                <td>Librarian</td>
+                                <td>Library</td>
+                                <td>l.davis@school.edu</td>
+                                <td>Feb 14, 2023</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn p-btn action-btn">View</button>
+                                        <button class="btn p-btn action-btn">Edit</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>STF-2019-0056</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="staff-avatar me-2">JB</div>
+                                        James Brown
+                                    </div>
+                                </td>
+                                <td>Maintenance Supervisor</td>
+                                <td>Facilities</td>
+                                <td>j.brown@school.edu</td>
+                                <td>Nov 5, 2019</td>
+                                <td><span class="badge bg-warning text-dark">On Leave</span></td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn p-btn action-btn">View</button>
+                                        <button class="btn p-btn action-btn">Edit</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <nav aria-label="Staff pagination">
+                    <ul class="pagination justify-content-center mt-4">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="row mt-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card text-white bg-primary">
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Staff ID</th>
-                                        <th>Name</th>
-                                        <th>Position</th>
-                                        <th>Department</th>
-                                        <th>Contact</th>
-                                        <th>Join Date</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>STF-2021-0012</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="staff-avatar me-2">RJ</div>
-                                                Robert Johnson
-                                            </div>
-                                        </td>
-                                        <td>IT Administrator</td>
-                                        <td>IT Department</td>
-                                        <td>r.johnson@school.edu</td>
-                                        <td>Jan 15, 2021</td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm">
-                                                <button class="btn p-btn action-btn">View</button>
-                                                <button class="btn p-btn action-btn">Edit</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>STF-2022-0045</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="staff-avatar me-2">SG</div>
-                                                Sarah Garcia
-                                            </div>
-                                        </td>
-                                        <td>HR Manager</td>
-                                        <td>Human Resources</td>
-                                        <td>s.garcia@school.edu</td>
-                                        <td>Mar 22, 2022</td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm">
-                                                <button class="btn p-btn action-btn">View</button>
-                                                <button class="btn p-btn action-btn">Edit</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>STF-2020-0078</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="staff-avatar me-2">MW</div>
-                                                Michael Wilson
-                                            </div>
-                                        </td>
-                                        <td>Finance Officer</td>
-                                        <td>Finance</td>
-                                        <td>m.wilson@school.edu</td>
-                                        <td>Aug 10, 2020</td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm">
-                                                <button class="btn p-btn action-btn">View</button>
-                                                <button class="btn p-btn action-btn">Edit</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>STF-2023-0023</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="staff-avatar me-2">LD</div>
-                                                Lisa Davis
-                                            </div>
-                                        </td>
-                                        <td>Librarian</td>
-                                        <td>Library</td>
-                                        <td>l.davis@school.edu</td>
-                                        <td>Feb 14, 2023</td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm">
-                                                <button class="btn p-btn action-btn">View</button>
-                                                <button class="btn p-btn action-btn">Edit</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>STF-2019-0056</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="staff-avatar me-2">JB</div>
-                                                James Brown
-                                            </div>
-                                        </td>
-                                        <td>Maintenance Supervisor</td>
-                                        <td>Facilities</td>
-                                        <td>j.brown@school.edu</td>
-                                        <td>Nov 5, 2019</td>
-                                        <td><span class="badge bg-warning text-dark">On Leave</span></td>
-                                        <td>
-                                            <div class="btn-group btn-group-sm">
-                                                <button class="btn p-btn action-btn">View</button>
-                                                <button class="btn p-btn action-btn">Edit</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">86</h4>
+                                <p class="card-text">Total Staff</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-people-fill" style="font-size: 2rem;"></i>
+                            </div>
                         </div>
-
-                        <!-- Pagination -->
-                        <nav aria-label="Staff pagination">
-                            <ul class="pagination justify-content-center mb-0">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Quick Actions</h5>
-                    </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card text-white bg-success">
                     <div class="card-body">
-                        <div class="d-flex flex-wrap gap-2">
-                            <button class="btn p-btn">
-                                <i class="bi bi-download me-1"></i> Export Staff List
-                            </button>
-                            <button class="btn p-btn">
-                                <i class="bi bi-printer me-1"></i> Print Directory
-                            </button>
-                            <button class="btn p-btn">
-                                <i class="bi bi-envelope me-1"></i> Send Announcement
-                            </button>
-                            <button class="btn p-btn">
-                                <i class="bi bi-graph-up me-1"></i> Staff Reports
-                            </button>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">78</h4>
+                                <p class="card-text">Active Staff</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-check-circle" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">5</h4>
+                                <p class="card-text">On Leave</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-clock" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">8</h4>
+                                <p class="card-text">Departments</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-building" style="font-size: 2rem;"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
