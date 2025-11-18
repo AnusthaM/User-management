@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Schedule - Student Portal</title>
+    <title>School User Management - Classes</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -14,7 +14,6 @@
         }
         body{
             overflow-x: hidden;
-            background-color: #f8f9fa;
         }
         .p-btn{
             color:var(--p-color);
@@ -45,6 +44,7 @@
         .sidebar .nav-link {
             color: #555;
             border-radius: 8px;
+            margin-bottom: 5px;
         }
 
         .sidebar .nav-link.active,
@@ -56,67 +56,50 @@
             margin-left: 200px;
             padding: 20px;
         }
-        
-        /* Schedule specific styles */
-        .schedule-card {
-            border-radius: 10px;
-            border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .class-card {
+            border-left: 4px solid var(--p-color);
             transition: transform 0.2s;
         }
-        .schedule-card:hover {
-            transform: translateY(-2px);
+        .class-card:hover {
+            transform: translateY(-5px);
         }
-        .time-slot {
-            border-left: 4px solid var(--p-color);
-            background: white;
-        }
-        .current-class {
-            border-left: 4px solid #28a745;
-            background: linear-gradient(135deg, #f8fff9, #ffffff);
-        }
-        .break-time {
-            border-left: 4px solid #ffc107;
-            background: #fffbf0;
-        }
-        .day-tab {
+        .filter-section {
+            background-color: #f8f9fa;
             border-radius: 8px;
-            padding: 10px 20px;
-            margin: 0 5px;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 15px;
+            margin-bottom: 20px;
         }
-        .day-tab.active {
-            background-color: var(--p-color);
-            color: white;
+        .class-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--p-color);
         }
-        .subject-badge {
-            background-color: var(--p-color);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-        }
-        
-        @media (max-width: 576px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding: 1rem;
+         @media (max-width: 576px) {
+                .sidebar {
+                    width: 100%;
+                    height: auto;
+                    position: relative;
+                    padding: 1rem;
+                }
+                
+                .body {
+                    text-align: center;
+                }
+
+                .main-content {
+                    margin-left: 0;
+                }
+                
+                .navbar {
+                    padding-left: 1rem !important;
+                }
             }
-            .main-content {
-                margin-left: 0;
-            }
-            .navbar {
-                padding-left: 1rem !important;
-            }
-            .day-tab {
-                padding: 8px 12px;
-                margin: 2px;
-                font-size: 0.9rem;
-            }
-        }
     </style>
 </head>
 
@@ -127,7 +110,7 @@
             <!-- Brand/Logo -->
             <a class="navbar-brand fw-bold" href="#">
                 <i class="bi bi-mortarboard-fill me-2"></i>
-                Student Portal
+                School User Management
             </a>
 
             <!-- User profile section -->
@@ -137,7 +120,7 @@
                         <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
                             <i class="bi bi-person-fill" style="color: var(--p-color);"></i>
                         </div>
-                        Sarah Johnson
+                        Admin User
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="profile.html">
@@ -161,7 +144,7 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <h5>Student Portal</h5>
+        <h5>Navigation</h5>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link" href="dashboard.html">
@@ -170,38 +153,43 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="profile.html">
-                    <i class="bi bi-person me-2"></i>
-                    My Profile
+                <a class="nav-link" href="student.html">
+                    <i class="bi bi-people me-2"></i>
+                    Students
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="schedule.html">
-                    <i class="bi bi-calendar-week me-2"></i>
-                    Time Table
+                <a class="nav-link" href="teacher.html">
+                    <i class="bi bi-person-badge me-2"></i>
+                    Teachers
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="grades.html">
+                <a class="nav-link" href="staff.html">
                     <i class="bi bi-journal-text me-2"></i>
-                    Grades
+                    Staff
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="attendance.html">
-                    <i class="bi bi-clipboard-check me-2"></i>
-                    Attendance
+                <a class="nav-link active" href="#">
+                    <i class="bi bi-journal-text me-2"></i>
+                    Classes
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="announcements.html">
-                    <i class="bi bi-megaphone me-2"></i>
-                    Announcements
+                <a class="nav-link" href="audit-logs.html">
+                    <i class="bi bi-file-earmark-ruled"></i>
+                    Audit Logs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="reports.html">
+                    <i class="bi bi-graph-up me-2"></i>
+                    Reports
                 </a>
             </li>
         </ul>
     </div>
-
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
